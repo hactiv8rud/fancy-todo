@@ -4,6 +4,8 @@ function showLoginPage() {
     $("#navbar").hide();
     $("#notification-container").empty();
     $("#main-page").hide();
+    $("#project-list").hide();
+    $("#project-page").hide();
 }
 
 function showRegisterPage() {
@@ -12,6 +14,8 @@ function showRegisterPage() {
     $("#navbar").hide();
     $("#notification-container").empty();
     $("#main-page").hide();
+    $("#project-list").hide();
+    $("#project-page").hide();
 }
 
 function showMainPage() {
@@ -23,6 +27,8 @@ function showMainPage() {
     $("#navbar").show();
     $("#notification-container").empty();
     $("#main-page").show();
+    $("#project-list").hide();
+    $("#project-page").hide();
     if(localStorage.getItem("quoteText") !== "") {
         $("#quote-text").text("");
         $("#quote-author").text("");
@@ -31,6 +37,33 @@ function showMainPage() {
     $("#quote-author").text(`- ${localStorage.getItem("quoteAuthor")} -`);
     fetchTodos();
 }
+
+function showProjectList() {
+
+}
+
+function showProjectPage() {
+    getCurrentWeather();
+    $("#user-name").text("");
+    $("#user-name").text(localStorage.getItem("fullName"));
+    $("#login-page").hide();
+    $("#register-page").hide();
+    $("#navbar").show();
+    $("#notification-container").empty();
+    $("#main-page").hide();
+    $("#project-list").hide();
+    $("#project-page").show();
+    if(localStorage.getItem("quoteText") !== "") {
+        $("#quote-text").text("");
+        $("#quote-author").text("");
+    }
+    $("#quote-text").text(localStorage.getItem("quoteText"));
+    $("#quote-author").text(`- ${localStorage.getItem("quoteAuthor")} -`);
+    fetchTodos();
+}
+
+
+
 
 function login(){
     const email = $("#login-email").val();

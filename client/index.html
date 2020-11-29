@@ -21,6 +21,7 @@
             Fancy ToDo
         </button>
         <button onclick="showMainPage()" type="button" class="btn btn-light" id="nav-home">Home</button>
+        <button onclick="showProjectList()" type="button" class="btn btn-light" id="nav-home">Projects</button>
         <button type="button" class="btn btn-light ml-auto" id="btn-logout">Log out</button>
     </nav>
     <div id="notification-container"></div>
@@ -226,7 +227,201 @@
                     <div id="main-expired-content"></div>
                 </div>
             </div>
+        </div>
 
+        <div id="project-list">
+            <h1>Project List</h1>
+            <button type="button" class="btn btn-success">Create Project</button>
+            <div class="accepted-project-container">
+                <table class="table table-hover" id="accepted-project">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Creator</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Vue.js Game</td>
+                        <td>Build a game using Vue components.</td>
+                        <td>John Doe</td>
+                        <td>
+                            <div class="accepted-project-btn-container">
+                                <button type="button" onclick="showProjectPage()" class="btn btn-primary">Project Page</button>
+                                <button type="button" onclick="" class="btn btn-danger">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>Invited Projects</h2>
+            <div class="invited-project-container">
+                <table class="table table-hover" id="invited-project">
+                    <thead class="thead-success">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Creator</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead class="thead-danger">
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Vue.js E-commerce</td>
+                        <td>Build an E-commerce using Vue.js</td>
+                        <td>Jane Doe</td>
+                        <td>
+                            <div class="invited-project-btn-container">
+                                <button type="button" class="btn btn-success">Accept</button>
+                                <button type="button" class="btn btn-danger">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div id="project-page">
+
+            <div class="main-top-container row" style="height:40%">
+                <div class="weather-widget-container col custom-border"
+                    style="padding-left:0;padding-right:0;max-height:30rem">
+                    <div class="welcome-container" style="width:100%;height:100%;padding:1rem">
+                        <div id="welcome-title">Welcome</div>
+                        <div class="mt-2" id="user-name"></div>
+
+                        <div class="weather-content mt-1 custom-border">
+                            <h1 id="city"></h1>
+                            <p id="current-weather-date"></p>
+                            <div style="display:flex;">
+                                <div>
+                                    <img id="current-weather-icon" class="custom-border"
+                                        style="background-color:white;position:relative;top:0.5rem">
+                                </div>
+                                <div class="ml-4">
+                                    <h3 id="current-weather-desc"></h3>
+                                    <p id="current-weather-temp"></p>
+                                    <p id="current-weather-wind"></p>
+                                </div>
+                            </div>
+                            <div class="">
+                                <button type="button" data-toggle="modal" data-target="#hourly-forecast-modal"
+                                    class="btn mt-1" id="get-hourly-forecast"
+                                    style="background-color:#b3b3b3;font-weight:500;width:100%">See 48-Hour
+                                    Forecast</button>
+                                <button type="button" data-toggle="modal" data-target="#daily-forecast-modal"class="btn mt-1" id="get-daily-forecast"
+                                    style="background-color:#b3b3b3;font-weight:500;width:100%">See 7-Day
+                                    Forecast</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="add-task-container col" style="padding-left:0;padding-right:0;width:30rem">
+                    <div class="add-task-form-content">
+                        <div class="add-form-container">
+                            <div class="add-task-form-title">
+                                <h1>Add a task</h1>
+                            </div>
+                            <form id="add-task-form">
+                                <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="add-task-title" name="title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <input type="text" class="form-control" id="add-task-description"
+                                        name="description">
+                                </div>
+                                <div class="form-group">
+                                    <label for="due_date">Due Date</label>
+                                    <input type="date" class="form-control" id="add-task-due_date" name="due_date">
+                                </div>
+                                <button type="submit" class="btn mt-4" id="add-task-btn">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quote-widget-container col custom-border"
+                    style="padding-left:0;padding-right:0;height:30rem">
+                    <div class="quote-container" style="width:100%;height:100%;padding:1rem">
+                        <div id="welcome-title">PROJECT</div>
+                        <div class="quote-content mt-4 custom-border">
+                            <p id="quote-text"></p>
+                        </div>
+                        <p class="mt-2" id="quote-author"></p>
+                        <button type="button" class="btn mt-3" id="get-quote"
+                            style="background-color:#b3b3b3;font-weight:500;width:100%">Get Another Quote</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-bottom-container mt-2 row">
+                <div class="main-uncompleted-container col mr-1">
+                    <div class="main-uncompleted-header-container">
+                        <h3 class="main-uncompleted-header-title text-center">ONGOING</h3>
+                            <div class="form-group">
+                                <label for="search-categories">Search by: </label>
+                                <select class="form-control" name="uncompleted-search-category" id="uncompleted-search-category">
+                                    <option selected>Title</option>
+                                    <option>Description</option>
+                                    <option>Due Date</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control border-light" type="text" id="uncompleted-search" placeholder="search">
+                            </div>
+                        
+                    </div>
+                    <div id="main-uncompleted-content">
+                    </div>
+                </div>
+                <div class="main-completed-container col">
+                    <div class="main-completed-header-container">
+                        <h3 class="main-completed-header-title text-center">COMPLETED</h3>
+                            <div class="form-group">
+                                <label for="search-categories">Search by: </label>
+                                <select class="form-control" name="completed-search-category" id="completed-search-category">
+                                    <option selected>Title</option>
+                                    <option>Description</option>
+                                    <option>Due Date</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control border-light" type="text" id="completed-search" placeholder="search">
+                            </div>
+                    </div>
+                    <div id="main-completed-content"></div>
+                </div>
+                <div class="main-expired-container col ml-1">
+                    <div class="main-expired-header-container">
+                        <h3 class="main-expired-header-title text-center">EXPIRED</h3>
+                            <div class="form-group">
+                                <label for="search-categories">Search by: </label>
+                                <select class="form-control" name="expired-search-categories" id="expired-search-category">
+                                    <option selected>Title</option>
+                                    <option>Description</option>
+                                    <option>Due Date</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control border-light" type="text" id="expired-search" placeholder="search">
+                            </div>
+                    </div>
+                    <div id="main-expired-content"></div>
+                </div>
+            </div>
         </div>
 
     </div>
