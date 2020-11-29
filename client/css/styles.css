@@ -5,8 +5,10 @@
 html,
 body {
    height: 100%; 
-   overflow: auto;
+   overflow-y:auto;
+   overflow-x:hidden;
 }
+
 
 #login-page {
    height: 100%;
