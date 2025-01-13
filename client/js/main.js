@@ -28,12 +28,16 @@ $(document).ready(() => {
         createTask();
     })
 
-    $("#get-hourly-forecast").on("click", (e) => {
-        getHourlyForecast();
-    })
+    // $("#get-hourly-forecast").on("click", (e) => {
+    //     getHourlyForecast();
+    // })
 
-    $("#get-daily-forecast").on("click", (e) => {
-        getDailyForecast();
+    // $("#get-daily-forecast").on("click", (e) => {
+    //     getDailyForecast();
+    // })
+
+    $("#get-forecast").on("click", (e) => {
+        getForecast();
     })
 
     $("#get-quote").on("click", (e) => {
@@ -53,8 +57,8 @@ $(document).ready(() => {
             } else {
                 target = ".card-subtitle";
             }
-            console.log(target);
-            console.log(value);
+            // console.log(target);
+            // console.log(value);
             $("#main-uncompleted-content > div").filter(function() {
                 let targetText =  $(this).find(`${target}`).text().toLowerCase();
                 $(this).toggle($(this).find(`${target}`).text().toLowerCase().indexOf(value) > -1);
@@ -76,8 +80,8 @@ $(document).ready(() => {
             } else {
                 target = ".card-subtitle";
             }
-            console.log(target);
-            console.log(value);
+            // console.log(target);
+            // console.log(value);
             $("#main-completed-content > div").filter(function() {
                 let targetText =  $(this).find(`${target}`).text().toLowerCase();
                 $(this).toggle($(this).find(`${target}`).text().toLowerCase().indexOf(value) > -1);
@@ -99,8 +103,8 @@ $(document).ready(() => {
             } else {
                 target = ".card-subtitle";
             }
-            console.log(target);
-            console.log(value);
+            // console.log(target);
+            // console.log(value);
             $("#main-expired-content > div").filter(function() {
                 let targetText =  $(this).find(`${target}`).text().toLowerCase();
                 $(this).toggle($(this).find(`${target}`).text().toLowerCase().indexOf(value) > -1);

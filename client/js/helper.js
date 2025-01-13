@@ -70,7 +70,7 @@ function getCurrentWeather() {
     function success(position) {
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        console.log(latitude, longitude)
+        // console.log(latitude, longitude)
         $.ajax({
             url: "http://localhost:3000/current-weather",
             method: "POST",
@@ -83,20 +83,22 @@ function getCurrentWeather() {
             }
         })
         .done((response) => {
-            console.log(response);
+            // console.log(response);
             const city = response.name;
             // const date = unixToLocal(response.current.dt)[0];
-            const date = unixToLocal(response.dt);
+            const date = unixToLocal(response.dt)[0];
+            const time = unixToLocal(response.dt)[1];
+            const dateTime = `${date}, ${time}`;
+            console.log(date)
             // const description = firstLetterUpperCase(response.current.weather[0].description);
             const description = firstLetterUpperCase(response.weather[0].description);
             // const temperature = `${Math.round(response.current.temp)} \xB0C`;
             const temperature = `${Math.round(response.main.temp)} \xB0C`;
             const wind = `${Math.round(response.wind.speed)} m/s`;
             const icon_url = `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
-            console.log(description)
         
             $("#city").text(city);
-            $("#current-weather-date").text(date);
+            $("#current-weather-date").text(dateTime);
             $("#current-weather-icon").attr("src", icon_url);
             $("#current-weather-desc").text(description);
             $("#current-weather-temp").text(`Temperature: ${temperature}`);
@@ -616,11 +618,148 @@ let weekday = new Array(7);
     return date;
 }
 
-function getHourlyForecast() {
+// function getHourlyForecast() {
+//     function success(position) {
+//         const latitude  = position.coords.latitude;
+//         const longitude = position.coords.longitude;
+//         console.log(latitude, longitude)
+//         $.ajax({
+//             url: "http://localhost:3000/weather",
+//             method: "POST",
+//             headers: {
+//                 access_token: localStorage.getItem("access_token")
+//             },
+//             data: {
+//                 latitude,
+//                 longitude
+//             }
+//         })
+//         .done((response) => {
+//             $("#hourly-forecast-content").empty();
+//             const city = getCityName(response.timezone);
+
+//             for(let i = 0; i < response.hourly.length; i++) {
+//                 const data = response.hourly[i];
+//                 const date = unixToLocal(data.dt)[0];
+//                 const time = unixToLocal(data.dt)[1];
+//                 const description = firstLetterUpperCase(data.weather[0].description);
+//                 const temperature = `${Math.round(data.temp)} \xB0C`;
+//                 const wind = `${Math.round(data.wind_speed)} m/s`;
+        
+//                 $("#hourly-forecast-content").append(`
+//                 <div class="weather-content custom-border">
+//                     <h1>${city}</h1>
+//                     <p>${date}</p>
+//                     <p>Time: ${time}</p>
+//                     <div style="display:flex;">
+//                         <div>
+//                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+//                                 style="background-color:white;position:relative;top:0.5rem">
+//                         </div>
+//                         <div class="ml-4">
+//                             <h3>${description}</h3>
+//                             <p>Temperature: ${temperature}</p>
+//                             <p>Wind: ${wind}</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//                 `);
+//             }
+//         })
+//         .fail((err) => {
+//             console.log(err);
+//         })
+//     }
+
+//     function error() {
+//         concsole.log("ERROR")
+//         // $("#location-status").text('Unable to retrieve your location');
+//     }
+
+//     if(!navigator.geolocation) {
+//         console.log("ERROR")
+//         // $("#location-status").text("Geolocation is not supported by your browser");
+//     } else {
+//         // $("#location-status").text("Locating ...");
+//         navigator.geolocation.getCurrentPosition(success, error);
+//     }
+// }
+
+// function getDailyForecast() {
+//     function success(position) {
+//         const latitude  = position.coords.latitude;
+//         const longitude = position.coords.longitude;
+//         console.log(latitude, longitude)
+//         $.ajax({
+//             url: "http://localhost:3000/weather",
+//             method: "POST",
+//             headers: {
+//                 access_token: localStorage.getItem("access_token")
+//             },
+//             data: {
+//                 latitude,
+//                 longitude
+//             }
+//         })
+//         .done((response) => {
+//             $("#daily-forecast-content").empty();
+//             const city = getCityName(response.timezone);
+
+//             for(let i = 0; i < response.daily.length; i++) {
+//                 const data = response.daily[i];
+//                 const date = unixToLocal(data.dt)[0];
+//                 const time = unixToLocal(data.dt)[1];
+//                 const description = firstLetterUpperCase(data.weather[0].description);
+//                 const morningTemp = `${Math.round(data.temp.morn)} \xB0C`;
+//                 const dayTemp = `${Math.round(data.temp.day)} \xB0C`;
+//                 const nightTemp = `${Math.round(data.temp.night)} \xB0C`;
+//                 const wind = `${Math.round(data.wind_speed)} m/s`;
+        
+//                 $("#daily-forecast-content").append(`
+//                 <div class="weather-content custom-border">
+//                     <h1>${city}</h1>
+//                     <p>${date}</p>
+//                     <div style="display:flex;">
+//                         <div>
+//                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+//                                     style="background-color:white;position:relative;top:0.5rem">
+//                         </div>
+//                         <div class="ml-4">
+//                             <h3><h3>${description}</h3></h3>
+//                             <p>Morning: ${morningTemp}</p>
+//                             <p>Day: ${dayTemp}</p>
+//                             <p>Night: ${nightTemp}</p>
+//                             <p>Wind: ${wind}</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//                 `);
+//             }
+//         })
+//         .fail((err) => {
+//             console.log(err);
+//         })
+//     }
+
+//     function error() {
+//         concsole.log("ERROR")
+//         // $("#location-status").text('Unable to retrieve your location');
+//     }
+
+//     if(!navigator.geolocation) {
+//         concsole.log("ERROR")
+//         // $("#location-status").text("Geolocation is not supported by your browser");
+//     } else {
+//         // $("#location-status").text("Locating ...");
+//         navigator.geolocation.getCurrentPosition(success, error);
+//     }
+// }
+
+function getForecast() {
     function success(position) {
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        console.log(latitude, longitude)
+        // console.log(latitude, longitude)
         $.ajax({
             url: "http://localhost:3000/weather",
             method: "POST",
@@ -633,90 +772,26 @@ function getHourlyForecast() {
             }
         })
         .done((response) => {
-            $("#hourly-forecast-content").empty();
-            const city = getCityName(response.timezone);
+            console.log(response)
+            $("#forecast-content").empty();
+            const city = response.city.name;
 
-            for(let i = 0; i < response.hourly.length; i++) {
-                const data = response.hourly[i];
+            for(let i = 0; i < response.list.length; i++) {
+                const data = response.list[i];
                 const date = unixToLocal(data.dt)[0];
                 const time = unixToLocal(data.dt)[1];
+                const dateTime = `${date}, ${time}`;
                 const description = firstLetterUpperCase(data.weather[0].description);
-                const temperature = `${Math.round(data.temp)} \xB0C`;
-                const wind = `${Math.round(data.wind_speed)} m/s`;
+                const mainTemp = `${Math.round(data.main.temp)} \xB0C`;
+                const feelsLike = `${Math.round(data.main.feels_like)} \xB0C`;
+                const minTemp = `${Math.round(data.main.temp_min)} \xB0C`;
+                const maxTemp = `${Math.round(data.main.temp_max)} \xB0C`;
+                const wind = `${Math.round(data.wind.speed)} m/s`;
         
-                $("#hourly-forecast-content").append(`
+                $("#forecast-content").append(`
                 <div class="weather-content custom-border">
                     <h1>${city}</h1>
-                    <p>${date}</p>
-                    <p>Time: ${time}</p>
-                    <div style="display:flex;">
-                        <div>
-                            <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
-                                style="background-color:white;position:relative;top:0.5rem">
-                        </div>
-                        <div class="ml-4">
-                            <h3>${description}</h3>
-                            <p>Temperature: ${temperature}</p>
-                            <p>Wind: ${wind}</p>
-                        </div>
-                    </div>
-                </div>
-                `);
-            }
-        })
-        .fail((err) => {
-            console.log(err);
-        })
-    }
-
-    function error() {
-        concsole.log("ERROR")
-        // $("#location-status").text('Unable to retrieve your location');
-    }
-
-    if(!navigator.geolocation) {
-        concsole.log("ERROR")
-        // $("#location-status").text("Geolocation is not supported by your browser");
-    } else {
-        // $("#location-status").text("Locating ...");
-        navigator.geolocation.getCurrentPosition(success, error);
-    }
-}
-
-function getDailyForecast() {
-    function success(position) {
-        const latitude  = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        console.log(latitude, longitude)
-        $.ajax({
-            url: "http://localhost:3000/weather",
-            method: "POST",
-            headers: {
-                access_token: localStorage.getItem("access_token")
-            },
-            data: {
-                latitude,
-                longitude
-            }
-        })
-        .done((response) => {
-            $("#daily-forecast-content").empty();
-            const city = getCityName(response.timezone);
-
-            for(let i = 0; i < response.daily.length; i++) {
-                const data = response.daily[i];
-                const date = unixToLocal(data.dt)[0];
-                const time = unixToLocal(data.dt)[1];
-                const description = firstLetterUpperCase(data.weather[0].description);
-                const morningTemp = `${Math.round(data.temp.morn)} \xB0C`;
-                const dayTemp = `${Math.round(data.temp.day)} \xB0C`;
-                const nightTemp = `${Math.round(data.temp.night)} \xB0C`;
-                const wind = `${Math.round(data.wind_speed)} m/s`;
-        
-                $("#daily-forecast-content").append(`
-                <div class="weather-content custom-border">
-                    <h1>${city}</h1>
-                    <p>${date}</p>
+                    <p>${dateTime}</p>
                     <div style="display:flex;">
                         <div>
                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
@@ -724,9 +799,10 @@ function getDailyForecast() {
                         </div>
                         <div class="ml-4">
                             <h3><h3>${description}</h3></h3>
-                            <p>Morning: ${morningTemp}</p>
-                            <p>Day: ${dayTemp}</p>
-                            <p>Night: ${nightTemp}</p>
+                            <p>Temp: ${mainTemp}</p>
+                            <p>Feels Like: ${feelsLike}</p>
+                            <p>Min Temp: ${minTemp}</p>
+                            <p>Max Temp: ${maxTemp}</p>
                             <p>Wind: ${wind}</p>
                         </div>
                     </div>

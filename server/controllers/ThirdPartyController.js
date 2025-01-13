@@ -9,7 +9,7 @@ class ThirdPartyController {
                 url: `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.OWM_KEY}&units=metric`,
                 method: "GET"
             });
-            console.log(response);
+            // console.log(response);
             res.status(200).json(response.data);
         } catch (err) {
             next(err);
@@ -21,10 +21,10 @@ class ThirdPartyController {
             let latitude = req.body.latitude;
             let longitude = req.body.longitude;
             const response = await axios({
-                url: `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&appid=${process.env.OWM_KEY}&units=metric`,
+                url: `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${process.env.OWM_KEY}&units=metric`,
                 method: "GET"
             });
-            console.log(response);
+            // console.log(response);
             res.status(200).json(response.data);
         } catch (err) {
             next(err);
@@ -37,7 +37,7 @@ class ThirdPartyController {
                 url: `https://quote-garden.herokuapp.com/api/v3/quotes/random`,
                 method: "GET"
             });
-            console.log(response);
+            // console.log(response);
             res.status(200).json(response.data);
         } catch (err) {
             next(err);

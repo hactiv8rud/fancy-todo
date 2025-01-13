@@ -120,13 +120,16 @@
                                 </div>
                             </div>
                             <div class="">
-                                <button type="button" data-toggle="modal" data-target="#hourly-forecast-modal"
+                                <!-- <button type="button" data-toggle="modal" data-target="#hourly-forecast-modal"
                                     class="btn mt-1" id="get-hourly-forecast"
                                     style="background-color:#b3b3b3;font-weight:500;width:100%">See 48-Hour
                                     Forecast</button>
                                 <button type="button" data-toggle="modal" data-target="#daily-forecast-modal"class="btn mt-1" id="get-daily-forecast"
                                     style="background-color:#b3b3b3;font-weight:500;width:100%">See 7-Day
-                                    Forecast</button>
+                                    Forecast</button> -->
+                                <button type="button" data-toggle="modal" data-target="#forecast-modal"class="btn mt-1" id="get-forecast"
+                                style="background-color:#b3b3b3;font-weight:500;width:100%">See 5-Day Forecast (3-Hour Step)
+                                Forecast</button>
                             </div>
                         </div>
                     </div>
@@ -268,7 +271,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="hourly-forecast-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!-- <div class="modal fade" id="hourly-forecast-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content" style="background-color:transparent;border:none">
@@ -284,6 +287,17 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content" style="background-color:transparent;border:none">
                 <div id="daily-forecast-content">
+                    
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="modal fade" id="forecast-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="background-color:transparent;border:none">
+                <div id="forecast-content">
                     
                 </div>
             </div>
