@@ -72,7 +72,7 @@ function getCurrentWeather() {
         const longitude = position.coords.longitude;
         console.log(latitude, longitude)
         $.ajax({
-            url: "http://localhost:3000/weather",
+            url: "http://localhost:3000/current-weather",
             method: "POST",
             headers: {
                 access_token: localStorage.getItem("access_token")
@@ -84,12 +84,16 @@ function getCurrentWeather() {
         })
         .done((response) => {
             console.log(response);
-            const city = getCityName(response.timezone);
-            const date = unixToLocal(response.current.dt)[0];
-            const description = firstLetterUpperCase(response.current.weather[0].description);
-            const temperature = `${Math.round(response.current.temp)} \xB0C`;
-            const wind = `${Math.round(response.current.wind_speed)} m/s`;
-            const icon_url = `http://openweathermap.org/img/wn/${response.current.weather[0].icon}@2x.png`;
+            const city = response.name;
+            // const date = unixToLocal(response.current.dt)[0];
+            const date = unixToLocal(response.dt);
+            // const description = firstLetterUpperCase(response.current.weather[0].description);
+            const description = firstLetterUpperCase(response.weather[0].description);
+            // const temperature = `${Math.round(response.current.temp)} \xB0C`;
+            const temperature = `${Math.round(response.main.temp)} \xB0C`;
+            const wind = `${Math.round(response.wind.speed)} m/s`;
+            const icon_url = `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
+            console.log(description)
         
             $("#city").text(city);
             $("#current-weather-date").text(date);
@@ -498,16 +502,16 @@ function deleteTask(id) {
     })
 }
 
-function getCityName(timezone) {
-    let slicedWords = timezone.split("/").slice(1);
-    let words = slicedWords[0];
-    let separateWord = words.toLowerCase().split('_');
-    for (var i = 0; i < separateWord.length; i++) {
-       separateWord[i] = separateWord[i].charAt(0).toUpperCase() +
-       separateWord[i].substring(1);
-    }
-    return separateWord.join(' ');
-}
+// function getCityName(timezone) {
+//     let slicedWords = timezone.split("/").slice(1);
+//     let words = slicedWords[0];
+//     let separateWord = words.toLowerCase().split('_');
+//     for (var i = 0; i < separateWord.length; i++) {
+//        separateWord[i] = separateWord[i].charAt(0).toUpperCase() +
+//        separateWord[i].substring(1);
+//     }
+//     return separateWord.join(' ');
+// }
 
 function firstLetterUpperCase(words) {
     let separateWord = words.toLowerCase().split(' ');
