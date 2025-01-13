@@ -37,7 +37,7 @@ function login(){
     const password = $("#login-password").val();
 
     $.ajax({
-        url: "https://fancytodorud.herokuapp.com/login",
+        url: "http://localhost:3000/login",
         method: "POST",
         data: {
             email,
@@ -72,7 +72,7 @@ function getCurrentWeather() {
         const longitude = position.coords.longitude;
         console.log(latitude, longitude)
         $.ajax({
-            url: "https://fancytodorud.herokuapp.com/weather",
+            url: "http://localhost:3000/weather",
             method: "POST",
             headers: {
                 access_token: localStorage.getItem("access_token")
@@ -123,7 +123,7 @@ function register(){
     const email = $("#register-email").val();
     const password = $("#register-password").val();
     $.ajax({
-        url: "https://fancytodorud.herokuapp.com/register",
+        url: "http://localhost:3000/register",
         method: "POST",
         data: {
             first_name,
@@ -159,10 +159,10 @@ function logout() {
     })
 }
 
-function onSignIn(googleUser) {
-    var googleToken = googleUser.getAuthResponse().id_token;
+function handleCredentialResponse(response) {
+    var googleToken = response.credential;
     $.ajax({
-        url: "https://fancytodorud.herokuapp.com/googleLogin",
+        url: "http://localhost:3000/googleLogin",
         method: "POST",
         data: {
             googleToken
@@ -242,7 +242,7 @@ function fetchTodos(){
     $("#edit-form-notification-container").empty();
     $.ajax({
         method: "GET",
-        url : "https://fancytodorud.herokuapp.com/todos",
+        url : "http://localhost:3000/todos",
         headers: {
             access_token: localStorage.getItem("access_token")
         }
@@ -343,7 +343,7 @@ function createTask() {
 
     $.ajax({
         method: "POST",
-        url : "https://fancytodorud.herokuapp.com/todos",
+        url : "http://localhost:3000/todos",
         headers: {
             access_token: localStorage.getItem("access_token")
         },
@@ -373,7 +373,7 @@ function createTask() {
 function completeTask(id) {
     $.ajax({
         method: "PATCH",
-        url: `https://fancytodorud.herokuapp.com/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         headers: {
             access_token: localStorage.getItem("access_token")
         },
@@ -398,7 +398,7 @@ function completeTask(id) {
 function uncompleteTask(id) {
     $.ajax({
         method: "PATCH",
-        url: `https://fancytodorud.herokuapp.com/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         headers: {
             access_token: localStorage.getItem("access_token")
         },
@@ -423,7 +423,7 @@ function uncompleteTask(id) {
 function editForm(id) {
     $.ajax({
         method: "GET",
-        url: `https://fancytodorud.herokuapp.com/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         headers: {
             access_token: localStorage.getItem("access_token")
         }
@@ -447,7 +447,7 @@ function editTask(event, id) {
     const due_date = $("#edit-task-due_date").val();
     $.ajax({
         method: "PUT",
-        url: `https://fancytodorud.herokuapp.com/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         headers: {
             access_token: localStorage.getItem("access_token")
         },
@@ -479,7 +479,7 @@ function deleteConfirm(id) {
 function deleteTask(id) {
     $.ajax({
         method: "DELETE",
-        url: `https://fancytodorud.herokuapp.com/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         headers: {
             access_token: localStorage.getItem("access_token")
         }
@@ -618,7 +618,7 @@ function getHourlyForecast() {
         const longitude = position.coords.longitude;
         console.log(latitude, longitude)
         $.ajax({
-            url: "https://fancytodorud.herokuapp.com/weather",
+            url: "http://localhost:3000/weather",
             method: "POST",
             headers: {
                 access_token: localStorage.getItem("access_token")
@@ -685,7 +685,7 @@ function getDailyForecast() {
         const longitude = position.coords.longitude;
         console.log(latitude, longitude)
         $.ajax({
-            url: "https://fancytodorud.herokuapp.com/weather",
+            url: "http://localhost:3000/weather",
             method: "POST",
             headers: {
                 access_token: localStorage.getItem("access_token")
@@ -751,7 +751,7 @@ function getDailyForecast() {
 
 function getQuote() {
         $.ajax({
-            url: "https://fancytodorud.herokuapp.com/quotes",
+            url: "http://localhost:3000/quotes",
             method: "GET",
             headers: {
                 access_token: localStorage.getItem("access_token")
