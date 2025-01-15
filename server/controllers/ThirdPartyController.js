@@ -34,10 +34,11 @@ class ThirdPartyController {
     static async getQuotes(req, res, next) {
         try {
             const response = await axios({
-                url: `https://quote-garden.herokuapp.com/api/v3/quotes/random`,
+                // url: `https://quote-garden.onrender.com/api/v3/quotes/random`,
+                url: `https://zenquotes.io/?api=random&option1=value&option2=value`,
                 method: "GET"
             });
-            // console.log(response);
+            console.log(response);
             res.status(200).json(response.data);
         } catch (err) {
             next(err);

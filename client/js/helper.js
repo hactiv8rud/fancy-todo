@@ -16,6 +16,7 @@ function showRegisterPage() {
 
 function showMainPage() {
     getCurrentWeather();
+    getQuote();
     $("#user-name").text("");
     $("#user-name").text(localStorage.getItem("fullName"));
     $("#login-page").hide();
@@ -23,12 +24,15 @@ function showMainPage() {
     $("#navbar").show();
     $("#notification-container").empty();
     $("#main-page").show();
-    if(localStorage.getItem("quoteText") !== "") {
-        $("#quote-text").text("");
-        $("#quote-author").text("");
-    }
-    $("#quote-text").text(localStorage.getItem("quoteText"));
-    $("#quote-author").text(`- ${localStorage.getItem("quoteAuthor")} -`);
+    $("#quote-text").text("");
+    $("#quote-author").text("");
+    //     $("#quote-author").text("");
+    // if(localStorage.getItem("quoteText") !== "") {
+    //     $("#quote-text").text("");
+    //     $("#quote-author").text("");
+    // }
+    // $("#quote-text").text(localStorage.getItem("quoteText"));
+    // $("#quote-author").text(`- ${localStorage.getItem("quoteAuthor")} -`);
     fetchTodos();
 }
 
@@ -47,7 +51,7 @@ function login(){
         .done(response => {
             localStorage.setItem("access_token", response.access_token);
             localStorage.setItem("fullName", response.fullName);
-            getQuote();
+            // getQuote();
             showMainPage();
             Swal.fire(
                 'Logged In!',
@@ -177,7 +181,7 @@ function handleCredentialResponse(response) {
     .done((response) => {
         localStorage.setItem("access_token", response.access_token);
         localStorage.setItem("fullName", response.fullName);
-        getQuote();
+        // getQuote();
         showMainPage();
         Swal.fire(
             'Logged In!',
@@ -269,9 +273,9 @@ function fetchTodos(){
                             <h6 class="card-subtitle mb-2 text-muted">${due_date}</h6>
                             <p class="card-text">${result.description}</p>
                             <div class="task-btn-container">
-                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask(${result.id})"><img src="/images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
-                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="/images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
-                                <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="/images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask(${result.id})"><img src="./images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="./images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
                             </div>
                         </div>
                     </div>`);
@@ -283,9 +287,9 @@ function fetchTodos(){
                             <h6 class="card-subtitle mb-2 text-muted">${due_date}</h6>
                             <p class="card-text">${result.description}</p>
                             <div class="task-btn-container">
-                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask(${result.id})"><img src="/images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
-                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="/images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
-                                <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="/images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask(${result.id})"><img src="./images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="./images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
                             </div>
                         </div>
                     </div>`);
@@ -298,9 +302,9 @@ function fetchTodos(){
                         <h6 class="card-subtitle mb-2 text-muted">${due_date}</h6>
                         <p class="card-text">${result.description}</p>
                         <div class="task-btn-container">
-                            <button type="button" class="btn mt-2 btn-sm" onclick="uncompleteTask(${result.id})"><img src="/images/mark_as_undone.svg" class="mark_as_undone-task-icon" width="30" height="30">Mark as Undone</button>
-                            <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="/images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
-                            <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="/images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
+                            <button type="button" class="btn mt-2 btn-sm" onclick="uncompleteTask(${result.id})"><img src="./images/mark_as_undone.svg" class="mark_as_undone-task-icon" width="30" height="30">Mark as Undone</button>
+                            <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
+                            <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="./images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
                         </div>
                     </div>
                 </div>`);
@@ -388,12 +392,13 @@ function completeTask(id) {
         }
     })
     .done((response) => {
-      showMainPage();
-      Swal.fire(
-        'Edited!',
-        "The task has been marked as done.",
-        'success'
-        )
+        fetchTodos();
+        Swal.fire(
+            'Edited!',
+            "The task has been marked as done.",
+            'success'
+            )
+        
     })
     .fail((err) => {
         console.log(err);
@@ -413,12 +418,12 @@ function uncompleteTask(id) {
         }
     })
     .done((response) => {
+        fetchTodos();
         Swal.fire(
             'Edited!',
             "The task has been marked as undone.",
             'success'
             )
-        fetchTodos();
     })
     .fail((err) => {
         console.log(err);
@@ -837,10 +842,17 @@ function getQuote() {
                 access_token: localStorage.getItem("access_token")
             },
         })
-        .done((response) => {
-            localStorage.setItem("quoteText", response.quote.quoteText);
-            localStorage.setItem("quoteAuthor", response.quote.quoteAuthor);
-            showMainPage();
+        .done((response) => { 
+            // localStorage.setItem("quoteText", response[0].q);
+            // localStorage.setItem("quoteAuthor", response[0].a);
+            if (response[0].q === "Too many requests. Obtain an auth key for unlimited access.") {
+                $("#quote-text").text("Too many requests. Please try again later.");
+            } else {
+                $("#quote-text").text(response[0].q);
+            }
+            
+            $("#quote-author").text(response[0].a);
+            // showMainPage();
         })
         .fail((err) => {
             console.log(err);
