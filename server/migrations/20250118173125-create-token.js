@@ -17,6 +17,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT
       },
+      csrfToken: {
+        allowNull: false,
+        type: Sequelize.TEXT
+      },
       expiredAt: {
         allowNull: false,
         type: Sequelize.DATE
