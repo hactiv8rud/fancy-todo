@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT
       },
-      expiredAt: {
+      refreshTokenExpiredAt: {
         allowNull: false,
         type: Sequelize.DATE
       },

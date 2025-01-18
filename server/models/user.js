@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       this.hasMany(models.Todo);
+      this.hasMany(models.Token);
     }
     getFullName() {
       return `${this.first_name} ${this.last_name}`;
