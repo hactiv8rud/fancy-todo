@@ -5,6 +5,19 @@ This app has :
 * RESTful endpoint for todo's CRUD operation
 * JSON formatted response
 
+## Environment-specific variables
+ACCESS_TOKEN_SECRET=
+REFRESH_TOKEN_SECRET=
+SALT=
+OWM_KEY=
+GOOGLE_CLIENT_ID=
+GOOGLE_PASSWORD=
+REFRESH_TOKEN_EXPIRY_MILLISECONDS=
+REFRESH_TOKEN_EXPIRY=
+ACCESS_TOKEN_EXPIRY=
+
+
+
 ## RESTful endpoints
 ### POST /login
 

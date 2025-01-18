@@ -1,8 +1,10 @@
-const { User } = require("../models");
+const { User, Token, Sequelize } = require("../models");
+const Op = Sequelize.Op;
 const { compare } = require("../helper/bcrypt");
 const { sign } = require("../helper/jwt");
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const crypto = require("crypto");
 
 class UserController {
     static register(req, res, next) {
