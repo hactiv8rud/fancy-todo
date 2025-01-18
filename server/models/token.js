@@ -11,12 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.User);
     }
   }
   Token.init({
     accessToken: DataTypes.TEXT,
     refreshToken: DataTypes.TEXT,
-    expiredAt: DataTypes.DATE
+    csrfToken: DataTypes.TEXT,
+    refreshTokenExpiredAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Token',
