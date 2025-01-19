@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const helmet            = require('helmet');
 const noCache           = require('nocache');
 const errorHandler = require("./middleware/errorHandler");
-const routes = require("./routes");
+const router = require("./routers");
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -37,7 +37,7 @@ app.use(noCache());
 app.use(express.urlencoded( { extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(routes);
+app.use(router);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
