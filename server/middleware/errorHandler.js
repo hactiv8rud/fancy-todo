@@ -25,6 +25,8 @@ function errorHandler(err, req, res, next) {
                 errors.push(tempMessage);
             }
         res.status(400).json({ messages: errors });
+    } else if (err.name === "TokenExpiredError") {
+        res.status(419).json({ message: "Your session has expired." })
     } else {
         res.status(500).json({ message: "Internal Server Error" });
     }
