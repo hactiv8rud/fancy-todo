@@ -1,11 +1,15 @@
-const { User } = require("../models");
+const { Token, User, Sequelize } = require("../models");
+const Op = Sequelize.Op;
 const { verifyToken } = require("../helper/jwt");
 
 module.exports = async (req, res, next) => {
     try {
-        const accessToken = req.headers.access_token;
+        const accessToken = req.headers.accesstoken;
+        const csrfToken = req.headers.csrftoken;
+        // console.log(JSON.stringify(req.headers));
         const refreshToken = req.cookies['refreshToken'];
-        const csrfToken = req.body.csrfToken;
+        // console.log(JSON.stringify(req.cookies), "authentication")
+        console.log(accessToken, csrfToken, "authentication/ATCT")
         if (!accessToken || !refreshToken || !csrfToken) {
             throw {
                 status: 401,

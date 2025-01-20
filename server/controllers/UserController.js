@@ -6,7 +6,6 @@ const getExpiredAt = require("../helper/getExpiredAt");
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const crypto = require("crypto");
-const { transcode } = require("buffer");
 
 class UserController {
     static register(req, res, next) {
@@ -69,9 +68,11 @@ class UserController {
                 }
             });
             res.cookie('refreshToken', refreshToken, {
-                MaxAge: +process.env.REFRESH_TOKEN_EXPIRY_MILLISECONDS,
+                expires: new Date(Date.now() + +process.env.REFRESH_TOKEN_EXPIRY_MILLISECONDS),
                 httpOnly: true,
-                secure: false
+                secure: true,
+                sameSite: 'none',
+                priority: 'high'
             });
             res.status(200).json({
                 accessToken, csrfToken, fullName: data.fullName
@@ -91,8 +92,8 @@ class UserController {
             let fullName;
             await sequelize.transaction(async (t) => {
                 const refreshToken = req.cookies['refreshToken'];
-                const csrfToken = req.body.csrfToken;
-                if (!refreshToken || !csrfToken) {
+                // const csrfToken = req.body.csrfToken;
+                if (!refreshToken) {
                     throw {
                         status: 401,
                         message: 'Unauthorized Access!'
@@ -100,7 +101,7 @@ class UserController {
                 }
                 const data = await Token.findOne({
                     where: {
-                        [Op.and]: [{ refreshToken }, { csrfToken }]
+                        [Op.and]: [{ refreshToken }]
                     },
                     transaction: t
                 });
@@ -134,9 +135,11 @@ class UserController {
                 }
             });
             res.cookie('refreshToken', newRefreshToken, {
-                MaxAge: +process.env.REFRESH_TOKEN_EXPIRY_MILLISECONDS,
+                expires: new Date(Date.now() + +process.env.REFRESH_TOKEN_EXPIRY_MILLISECONDS),
                 httpOnly: true,
-                secure: false
+                secure: true,
+                sameSite: 'none',
+                priority: 'high'
             });
             res.status(200).json({ accessToken, newCsrfToken, fullName });
         } catch (err) {
@@ -149,7 +152,7 @@ class UserController {
             await sequelize.transaction(async (t) => {
                 const UserId = +req.loggedInUser.id;
                 const refreshToken = req.cookies['refreshToken'];
-                const csrfToken = req.body.csrfToken;
+                const csrfToken = req.headers.csrfToken;
                 await Token.destroy({
                     where: {
                         [Op.or]: [
@@ -160,11 +163,11 @@ class UserController {
                     transaction: t
                 });
             });
-            res.cookie('refreshToken', '', {
-                expires: new Date(0),
-                httpOnly: true,
-                secure: false
-            });
+            // res.cookie('refreshToken', '', {
+            //     expires: new Date(0),
+            //     httpOnly: true,
+            //     secure: false
+            // });
             res.status(200).json({ message: 'You have been signed out' });
         } catch (err) {
             next(err);
@@ -182,11 +185,11 @@ class UserController {
                     transaction: t
                 });
             });
-            res.cookie('refreshToken', '', {
-                expires: new Date(0),
-                httpOnly: true,
-                secure: false
-            });
+            // res.cookie('refreshToken', '', {
+            //     expires: new Date(0),
+            //     httpOnly: true,
+            //     secure: false
+            // });
             res.status(200).json({ message: 'You have been signed out on all devices' });
         } catch (err) {
             next(err);

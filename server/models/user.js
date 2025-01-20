@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Todo);
       this.hasMany(models.Token);
     }
-    getFullName() {
-      return `${this.first_name} ${this.last_name}`;
-    }
+    // getFullName() {
+    //   return `${this.first_name} ${this.last_name}`;
+    // }
   };
   User.init({
     first_name: {
@@ -59,6 +59,12 @@ module.exports = (sequelize, DataTypes) => {
           args: true,
           msg: "Password is required."
         }
+      }
+    },
+    fullName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.first_name} ${this.last_name}`;
       }
     }
   }, {

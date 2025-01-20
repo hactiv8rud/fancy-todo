@@ -2,8 +2,8 @@ const router = require("express").Router();
 const authorization = require("../middleware/authorization");
 const TodoController = require("../controllers/TodoController");
 
-router.post("/", TodoController.add);
-router.get("/", TodoController.read);
+router.post("/", TodoController.read);
+router.post("/add", TodoController.add);
 
 router.use(authorization);
 router.get("/:id", TodoController.findByPk);

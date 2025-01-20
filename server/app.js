@@ -6,33 +6,49 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const helmet            = require('helmet');
-const noCache           = require('nocache');
+// const noCache           = require('nocache');
 const errorHandler = require("./middleware/errorHandler");
 const router = require("./routers");
 const PORT = process.env.PORT || 3000;
 
 const app = express();
-app.use(cors());
+// const corsOpts = {
+//   origin: '*',
+//   credential: true,
+//   methods: [
+//     'GET',
+//     'POST',
+//   ],
+//   allowedHeaders: [
+//     'Content-Type',
+//   ],
+// };
 
-app.use(helmet({
- referrerPolicy: {
-    policy: ["same-origin"],
-  },
-  hsts: {
-    maxAge: 0,
-    force: true 
-  },
-  contentSecurityPolicy: {
-    directives: { 
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'"], 
-    }
-  }
+// app.use(cors(corsOpts));
+app.use(cors({ 
+    origin: 'https://rniob-2607-fea8-9963-b00-572-c4ee-6df-3e5e.a.free.pinggy.link',
+    credentials: true
 }));
+// app.use(helmet());    
+// app.use(helmet({
+//  referrerPolicy: {
+//     policy: ["same-origin"],
+//   },
+//   hsts: {
+//     maxAge: 0,
+//     force: true 
+//   },
+//   contentSecurityPolicy: {
+//     directives: { 
+//       defaultSrc: ["'self'"],
+//       scriptSrc: ["'self'", "'unsafe-inline'"],
+//       styleSrc: ["'self'", "'unsafe-inline'"],
+//       imgSrc: ["'self'"], 
+//     }
+//   }
+// }));
 
-app.use(noCache());
+// app.use(noCache());
 
 app.use(express.urlencoded( { extended: true }));
 app.use(express.json());
