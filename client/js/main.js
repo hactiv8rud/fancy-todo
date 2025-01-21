@@ -1,6 +1,16 @@
+let accesstoken;
+let csrftoken;
+let fullName;
 $(document).ready(() => {
-    if(localStorage.getItem("access_token")) {
-        showMainPage();
+    // if(localStorage.getItem("accesstoken")) {
+    //     showMainPage();
+    // } else {
+    //     showLoginPage();
+    // }
+    reauth();
+    if(accesstoken) {
+        console.log(accesstoken, "main.js");
+        showMainPage(accesstoken, csrftoken, fullName);
     } else {
         showLoginPage();
     }
@@ -25,7 +35,7 @@ $(document).ready(() => {
 
     $("#add-task-form").on("submit", (e) => {
         e.preventDefault();
-        createTask();
+        createTask(accesstoken, csrftoken);
     })
 
     // $("#get-hourly-forecast").on("click", (e) => {
@@ -37,12 +47,12 @@ $(document).ready(() => {
     // })
 
     $("#get-forecast").on("click", (e) => {
-        getForecast();
+        getForecast(accesstoken, csrftoken);
     })
 
     $("#get-quote").on("click", (e) => {
         e.preventDefault();
-        getQuote();
+        getQuote(accesstoken, csrftoken);
     })
 
     $("#uncompleted-search").on("keyup", function() {

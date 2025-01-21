@@ -14,11 +14,14 @@ function showRegisterPage() {
     $("#main-page").hide();
 }
 
-function showMainPage() {
-    getCurrentWeather();
-    getQuote();
+function showMainPage(accesstoken, csrftoken, fullName) {
+    // console.log(accesstoken, "AT helper.js");
+    // console.log(csrftoken, "CT helper.js");
+    // console.log(fullName, "FN helper.js");
+    getCurrentWeather(accesstoken, csrftoken);
+    getQuote(accesstoken, csrftoken);
     $("#user-name").text("");
-    $("#user-name").text(localStorage.getItem("fullName"));
+    $("#user-name").text(fullName);
     $("#login-page").hide();
     $("#register-page").hide();
     $("#navbar").show();
@@ -33,7 +36,7 @@ function showMainPage() {
     // }
     // $("#quote-text").text(localStorage.getItem("quoteText"));
     // $("#quote-author").text(`- ${localStorage.getItem("quoteAuthor")} -`);
-    fetchTodos();
+    fetchTodos(accesstoken, csrftoken);
 }
 
 function login(){
@@ -41,18 +44,24 @@ function login(){
     const password = $("#login-password").val();
 
     $.ajax({
-        url: "http://localhost:3000/login",
+        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/login",
         method: "POST",
+        xhrFields: {
+            withCredentials: true
+        },
         data: {
             email,
             password
         }
     })
         .done(response => {
-            localStorage.setItem("access_token", response.access_token);
-            localStorage.setItem("fullName", response.fullName);
+            // localStorage.setItem("accesstoken", response.accesstoken);
+            // localStorage.setItem("fullName", response.fullName);
             // getQuote();
-            showMainPage();
+            accesstoken = response.accessToken;
+            csrftoken = response.csrfToken;
+            fullName = response.fullName;
+            showMainPage(accesstoken, csrftoken, fullName);
             Swal.fire(
                 'Logged In!',
                 "Welcome!",
@@ -70,61 +79,29 @@ function login(){
         })
 }
 
-function getCurrentWeather() {
-    function success(position) {
-        const latitude  = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        // console.log(latitude, longitude)
-        $.ajax({
-            url: "http://localhost:3000/current-weather",
-            method: "POST",
-            headers: {
-                access_token: localStorage.getItem("access_token")
-            },
-            data: {
-                latitude,
-                longitude
-            }
-        })
-        .done((response) => {
-            // console.log(response);
-            const city = response.name;
-            // const date = unixToLocal(response.current.dt)[0];
-            const date = unixToLocal(response.dt)[0];
-            const time = unixToLocal(response.dt)[1];
-            const dateTime = `${date}, ${time}`;
-            console.log(date)
-            // const description = firstLetterUpperCase(response.current.weather[0].description);
-            const description = firstLetterUpperCase(response.weather[0].description);
-            // const temperature = `${Math.round(response.current.temp)} \xB0C`;
-            const temperature = `${Math.round(response.main.temp)} \xB0C`;
-            const wind = `${Math.round(response.wind.speed)} m/s`;
-            const icon_url = `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
-        
-            $("#city").text(city);
-            $("#current-weather-date").text(dateTime);
-            $("#current-weather-icon").attr("src", icon_url);
-            $("#current-weather-desc").text(description);
-            $("#current-weather-temp").text(`Temperature: ${temperature}`);
-            $("#current-weather-wind").text(`Wind Speed: ${wind}`);
+function reauth() {
+    $.ajax({
+        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/reauth",
+        method: "POST",
+        xhrFields: {
+            withCredentials: true
+         },
+        data: {}
+    })
+        .done(response => {
+            // localStorage.setItem("accesstoken", response.accesstoken);
+            // localStorage.setItem("fullName", response.fullName);
+            // getQuote();
+            accesstoken = response.accesstoken;
+            csrftoken = response.csrftoken;
+            fullName = response.fullName;
+            // showMainPage();
         })
         .fail((err) => {
-            console.log(err);
+            showLoginPage();
+            // console.log(err);
+            // printError(err);
         })
-    }
-
-    function error() {
-        concsole.log("ERROR")
-        // $("#location-status").text('Unable to retrieve your location');
-    }
-
-    if(!navigator.geolocation) {
-        concsole.log("ERROR")
-        // $("#location-status").text("Geolocation is not supported by your browser");
-    } else {
-        // $("#location-status").text("Locating ...");
-        navigator.geolocation.getCurrentPosition(success, error);
-    }
 }
 
 function register(){
@@ -133,8 +110,11 @@ function register(){
     const email = $("#register-email").val();
     const password = $("#register-password").val();
     $.ajax({
-        url: "http://localhost:3000/register",
+        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/register",
         method: "POST",
+        xhrFields: {
+            withCredentials: true
+        },
         data: {
             first_name,
             last_name,
@@ -153,7 +133,6 @@ function register(){
         .fail((err) => {
             console.log(err);
             printError(err);
-           
         })
         .always(() => {
             $("#register-form").trigger("reset");
@@ -161,8 +140,30 @@ function register(){
 }
 
 function logout() {
-    localStorage.clear();
+    // localStorage.clear();
     showLoginPage();
+    $.ajax({
+        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/logout",
+        method: "POST",
+        xhrFields: {
+            withCredentials: true
+        },
+        headers: {
+            accesstoken,
+            csrftoken
+        }
+    })
+    .done((response) => {
+        showLoginPage();
+    })
+    .fail((err) => {
+        if (err.status === 419) {
+            reauth();
+        } else {
+            console.log(err);
+            printError(err);
+        }
+    })
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function() {
       console.log('User signed out.');
@@ -172,17 +173,23 @@ function logout() {
 function handleCredentialResponse(response) {
     var googleToken = response.credential;
     $.ajax({
-        url: "http://localhost:3000/googleLogin",
+        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/googleLogin",
         method: "POST",
+        xhrFields: {
+            withCredentials: true
+        },
         data: {
             googleToken
         }
     })
     .done((response) => {
-        localStorage.setItem("access_token", response.access_token);
-        localStorage.setItem("fullName", response.fullName);
+        // localStorage.setItem("accesstoken", response.accesstoken);
+        // localStorage.setItem("fullName", response.fullName);
         // getQuote();
-        showMainPage();
+        accesstoken = response.accessToken;
+        csrftoken = response.csrfToken;
+        fullName = response.fullName;
+        showMainPage(response.accesstoken, response.csrftoken, response.fullName);
         Swal.fire(
             'Logged In!',
             "Welcome!",
@@ -195,66 +202,18 @@ function handleCredentialResponse(response) {
     })
 }
 
-function printError(error){
-    $("#notification-container").empty();
-    
-    if (error.responseJSON.messages) {
-        const messages = error.responseJSON.messages;
-        messages.forEach((message) => {
-            $("#notification-container").append(`
-                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                `);
-        })
-    } else if (error.responseJSON.message) {
-        const message = error.responseJSON.message; 
-        $("#notification-container").append(`
-        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        `);
-    }
-}
-
-function printErrorEditForm(error){
-    $("#edit-form-notification-container").empty();
-    
-    if (error.responseJSON.messages) {
-        const messages = error.responseJSON.messages;
-        messages.forEach((message) => {
-            $("#edit-form-notification-container").append(`
-                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                `);
-        })
-    } else if (error.responseJSON.message) {
-        const message = error.responseJSON.message; 
-        $("#edit-form-notification-container").append(`
-        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        `);
-    }
-}
-
-function fetchTodos(){
+function fetchTodos(accesstoken, csrftoken){
     $("#notification-container").empty();
     $("#edit-form-notification-container").empty();
     $.ajax({
-        method: "GET",
-        url : "http://localhost:3000/todos",
+        method: "POST",
+        url : "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos",
+        xhrFields: {
+            withCredentials: true
+        },
         headers: {
-            access_token: localStorage.getItem("access_token")
+            accesstoken,
+            csrftoken
         }
     })
     .done((response) => {
@@ -341,21 +300,29 @@ function fetchTodos(){
         }
     })
     .fail((err) => {
-        console.log(err);
-        printError(err);
+        if (err.status === 419) {
+            reauth();
+        } else {
+            console.log(err);
+            printError(err);
+        }
     })
 }
 
-function createTask() {
+function createTask(accesstoken, csrftoken) {
     const title = $("#add-task-title").val();
     const description = $("#add-task-description").val();
     const due_date = $("#add-task-due_date").val();
 
     $.ajax({
         method: "POST",
-        url : "http://localhost:3000/todos",
+        url : "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/add",
+        xhrFields: {
+            withCredentials: true
+        },
         headers: {
-            access_token: localStorage.getItem("access_token")
+            accesstoken,
+            csrftoken
         },
         data: {
             title,
@@ -372,8 +339,12 @@ function createTask() {
             )
     })
     .fail((err) => {
-        console.log(err);
-        printError(err);
+        if (err.status === 419) {
+            reauth();
+        } else {
+            console.log(err);
+            printError(err);
+        }
     })
     .always(() => {
         $("#add-task-form").trigger("reset");
@@ -383,9 +354,13 @@ function createTask() {
 function completeTask(id) {
     $.ajax({
         method: "PATCH",
-        url: `http://localhost:3000/todos/${id}`,
+        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
         headers: {
-            access_token: localStorage.getItem("access_token")
+            accesstoken,
+            csrftoken
+        },
+        xhrFields: {
+            withCredentials: true
         },
         data: {
             status: "completed"
@@ -398,20 +373,27 @@ function completeTask(id) {
             "The task has been marked as done.",
             'success'
             )
-        
     })
     .fail((err) => {
-        console.log(err);
-        printError(err);
+        if (err.status === 419) {
+            reauth();
+        } else {
+            console.log(err);
+            printError(err);
+        }
     })
 }
 
 function uncompleteTask(id) {
     $.ajax({
         method: "PATCH",
-        url: `http://localhost:3000/todos/${id}`,
+        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        xhrFields: {
+            withCredentials: true
+        },
         headers: {
-            access_token: localStorage.getItem("access_token")
+            accesstoken,
+            csrftoken
         },
         data: {
             status: "uncompleted"
@@ -426,17 +408,25 @@ function uncompleteTask(id) {
             )
     })
     .fail((err) => {
-        console.log(err);
-        printError(err);
+        if (err.status === 419) {
+            reauth();
+        } else {
+            console.log(err);
+            printError(err);
+        }
     })
 }
 
 function editForm(id) {
     $.ajax({
         method: "GET",
-        url: `http://localhost:3000/todos/${id}`,
+        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        xhrFields: {
+            withCredentials: true
+        },
         headers: {
-            access_token: localStorage.getItem("access_token")
+            accesstoken,
+            csrftoken
         }
     })
     .done((response) => {
@@ -458,9 +448,13 @@ function editTask(event, id) {
     const due_date = $("#edit-task-due_date").val();
     $.ajax({
         method: "PUT",
-        url: `http://localhost:3000/todos/${id}`,
+        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        xhrFields: {
+            withCredentials: true
+        },
         headers: {
-            access_token: localStorage.getItem("access_token")
+            accesstoken,
+            csrftoken
         },
         data: {
             title,
@@ -478,8 +472,12 @@ function editTask(event, id) {
             )
     })
     .fail((err) => {
-        console.log(err);
-        printErrorEditForm(err);
+        if (err.status === 419) {
+            reauth();
+        } else {
+            console.log(err);
+            printError(err);
+        }
     })
 }  
   
@@ -490,9 +488,13 @@ function deleteConfirm(id) {
 function deleteTask(id) {
     $.ajax({
         method: "DELETE",
-        url: `http://localhost:3000/todos/${id}`,
+        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        xhrFields: {
+            withCredentials: true
+        },
         headers: {
-            access_token: localStorage.getItem("access_token")
+            accesstoken,
+            csrftoken
         }
     })
     .done((response) => {
@@ -504,8 +506,12 @@ function deleteTask(id) {
             )
     })
     .fail((err) => {
-        console.log(err);
-        printError(err);
+        if (err.status === 419) {
+            reauth();
+        } else {
+            console.log(err);
+            printError(err);
+        }
     })
 }
 
@@ -520,6 +526,329 @@ function deleteTask(id) {
 //     return separateWord.join(' ');
 // }
 
+// function getHourlyForecast() {
+//     function success(position) {
+//         const latitude  = position.coords.latitude;
+//         const longitude = position.coords.longitude;
+//         console.log(latitude, longitude)
+//         $.ajax({
+//             url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/weather",
+//             method: "POST",
+//             headers: {
+//                 accesstoken: localStorage.getItem("accesstoken")
+//             },
+//             data: {
+//                 latitude,
+//                 longitude
+//             }
+//         })
+//         .done((response) => {
+//             $("#hourly-forecast-content").empty();
+//             const city = getCityName(response.timezone);
+
+//             for(let i = 0; i < response.hourly.length; i++) {
+//                 const data = response.hourly[i];
+//                 const date = unixToLocal(data.dt)[0];
+//                 const time = unixToLocal(data.dt)[1];
+//                 const description = firstLetterUpperCase(data.weather[0].description);
+//                 const temperature = `${Math.round(data.temp)} \xB0C`;
+//                 const wind = `${Math.round(data.wind_speed)} m/s`;
+        
+//                 $("#hourly-forecast-content").append(`
+//                 <div class="weather-content custom-border">
+//                     <h1>${city}</h1>
+//                     <p>${date}</p>
+//                     <p>Time: ${time}</p>
+//                     <div style="display:flex;">
+//                         <div>
+//                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+//                                 style="background-color:white;position:relative;top:0.5rem">
+//                         </div>
+//                         <div class="ml-4">
+//                             <h3>${description}</h3>
+//                             <p>Temperature: ${temperature}</p>
+//                             <p>Wind: ${wind}</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//                 `);
+//             }
+//         })
+//         .fail((err) => {
+//             console.log(err);
+//         })
+//     }
+
+//     function error() {
+//         console.log("ERROR")
+//         // $("#location-status").text('Unable to retrieve your location');
+//     }
+
+//     if(!navigator.geolocation) {
+//         console.log("ERROR")
+//         // $("#location-status").text("Geolocation is not supported by your browser");
+//     } else {
+//         // $("#location-status").text("Locating ...");
+//         navigator.geolocation.getCurrentPosition(success, error);
+//     }
+// }
+
+// function getDailyForecast() {
+//     function success(position) {
+//         const latitude  = position.coords.latitude;
+//         const longitude = position.coords.longitude;
+//         console.log(latitude, longitude)
+//         $.ajax({
+//             url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/weather",
+//             method: "POST",
+//             headers: {
+//                 accesstoken: localStorage.getItem("accesstoken")
+//             },
+//             data: {
+//                 latitude,
+//                 longitude
+//             }
+//         })
+//         .done((response) => {
+//             $("#daily-forecast-content").empty();
+//             const city = getCityName(response.timezone);
+
+//             for(let i = 0; i < response.daily.length; i++) {
+//                 const data = response.daily[i];
+//                 const date = unixToLocal(data.dt)[0];
+//                 const time = unixToLocal(data.dt)[1];
+//                 const description = firstLetterUpperCase(data.weather[0].description);
+//                 const morningTemp = `${Math.round(data.temp.morn)} \xB0C`;
+//                 const dayTemp = `${Math.round(data.temp.day)} \xB0C`;
+//                 const nightTemp = `${Math.round(data.temp.night)} \xB0C`;
+//                 const wind = `${Math.round(data.wind_speed)} m/s`;
+        
+//                 $("#daily-forecast-content").append(`
+//                 <div class="weather-content custom-border">
+//                     <h1>${city}</h1>
+//                     <p>${date}</p>
+//                     <div style="display:flex;">
+//                         <div>
+//                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+//                                     style="background-color:white;position:relative;top:0.5rem">
+//                         </div>
+//                         <div class="ml-4">
+//                             <h3><h3>${description}</h3></h3>
+//                             <p>Morning: ${morningTemp}</p>
+//                             <p>Day: ${dayTemp}</p>
+//                             <p>Night: ${nightTemp}</p>
+//                             <p>Wind: ${wind}</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//                 `);
+//             }
+//         })
+//         .fail((err) => {
+//             console.log(err);
+//         })
+//     }
+
+//     function error() {
+//         console.log("ERROR")
+//         // $("#location-status").text('Unable to retrieve your location');
+//     }
+
+//     if(!navigator.geolocation) {
+//         console.log("ERROR")
+//         // $("#location-status").text("Geolocation is not supported by your browser");
+//     } else {
+//         // $("#location-status").text("Locating ...");
+//         navigator.geolocation.getCurrentPosition(success, error);
+//     }
+// }
+
+function getCurrentWeather(accesstoken, csrftoken) {
+    function success(position) {
+        const latitude  = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        // console.log(latitude, longitude)
+        $.ajax({
+            url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/current-weather",
+            method: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            headers: {
+                accesstoken,
+                csrftoken
+            },
+            data: {
+                latitude,
+                longitude
+            }
+        })
+        .done((response) => {
+            // console.log(response);
+            const city = response.name;
+            // const date = unixToLocal(response.current.dt)[0];
+            const date = unixToLocal(response.dt)[0];
+            const time = unixToLocal(response.dt)[1];
+            const dateTime = `${date}, ${time}`;
+            // console.log(date)
+            // const description = firstLetterUpperCase(response.current.weather[0].description);
+            const description = firstLetterUpperCase(response.weather[0].description);
+            // const temperature = `${Math.round(response.current.temp)} \xB0C`;
+            const temperature = `${Math.round(response.main.temp)} \xB0C`;
+            const wind = `${Math.round(response.wind.speed)} m/s`;
+            const icon_url = `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
+        
+            $("#city").text(city);
+            $("#current-weather-date").text(dateTime);
+            $("#current-weather-icon").attr("src", icon_url);
+            $("#current-weather-desc").text(description);
+            $("#current-weather-temp").text(`Temperature: ${temperature}`);
+            $("#current-weather-wind").text(`Wind Speed: ${wind}`);
+        })
+        .fail((err) => {
+            if (err.status === 419) {
+                reauth();
+            } else {
+                console.log(err);
+                printError(err);
+            }
+        })
+    }
+
+    function error() {
+        console.log("ERROR")
+        // $("#location-status").text('Unable to retrieve your location');
+    }
+
+    if(!navigator.geolocation) {
+        console.log("ERROR")
+        // $("#location-status").text("Geolocation is not supported by your browser");
+    } else {
+        // $("#location-status").text("Locating ...");
+        navigator.geolocation.getCurrentPosition(success, error);
+    }
+}
+
+function getForecast(accesstoken, csrftoken) {
+    function success(position) {
+        const latitude  = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        // console.log(latitude, longitude)
+        $.ajax({
+            url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/weather",
+            method: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            headers: {
+                accesstoken,
+                csrftoken
+            },
+            data: {
+                latitude,
+                longitude
+            }
+        })
+        .done((response) => {
+            console.log(response)
+            $("#forecast-content").empty();
+            const city = response.city.name;
+
+            for(let i = 0; i < response.list.length; i++) {
+                const data = response.list[i];
+                const date = unixToLocal(data.dt)[0];
+                const time = unixToLocal(data.dt)[1];
+                const dateTime = `${date}, ${time}`;
+                const description = firstLetterUpperCase(data.weather[0].description);
+                const mainTemp = `${Math.round(data.main.temp)} \xB0C`;
+                const feelsLike = `${Math.round(data.main.feels_like)} \xB0C`;
+                const minTemp = `${Math.round(data.main.temp_min)} \xB0C`;
+                const maxTemp = `${Math.round(data.main.temp_max)} \xB0C`;
+                const wind = `${Math.round(data.wind.speed)} m/s`;
+        
+                $("#forecast-content").append(`
+                <div class="weather-content custom-border">
+                    <h1>${city}</h1>
+                    <p>${dateTime}</p>
+                    <div style="display:flex;">
+                        <div>
+                            <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
+                                    style="background-color:white;position:relative;top:0.5rem">
+                        </div>
+                        <div class="ml-4">
+                            <h3><h3>${description}</h3></h3>
+                            <p>Temp: ${mainTemp}</p>
+                            <p>Feels Like: ${feelsLike}</p>
+                            <p>Min Temp: ${minTemp}</p>
+                            <p>Max Temp: ${maxTemp}</p>
+                            <p>Wind: ${wind}</p>
+                        </div>
+                    </div>
+                </div>
+                `);
+            }
+        })
+        .fail((err) => {
+            if (err.status === 419) {
+                reauth();
+            } else {
+                console.log(err);
+                printError(err);
+            }
+        })
+    }
+
+    function error() {
+        console.log("ERROR")
+        // $("#location-status").text('Unable to retrieve your location');
+    }
+
+    if(!navigator.geolocation) {
+        console.log("ERROR")
+        // $("#location-status").text("Geolocation is not supported by your browser");
+    } else {
+        // $("#location-status").text("Locating ...");
+        navigator.geolocation.getCurrentPosition(success, error);
+    }
+}
+
+function getQuote(accesstoken, csrftoken) {
+    console.log(accesstoken, "AT helper.js");
+    console.log(csrftoken, "CT helper.js");
+        $.ajax({
+            url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/quotes",
+            method: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            headers: {
+                accesstoken,
+                csrftoken
+            }
+        })
+        .done((response) => { 
+            // localStorage.setItem("quoteText", response[0].q);
+            // localStorage.setItem("quoteAuthor", response[0].a);
+            if (response[0].q === "Too many requests. Obtain an auth key for unlimited access.") {
+                $("#quote-text").text("Too many requests. Please try again later.");
+            } else {
+                $("#quote-text").text(response[0].q);
+            }
+            
+            $("#quote-author").text(response[0].a);
+            // showMainPage();
+        })
+        .fail((err) => {
+            if (err.status === 419) {
+                reauth();
+            } else {
+                console.log(err);
+                printError(err);
+            }
+        })
+
+}
+
 function firstLetterUpperCase(words) {
     let separateWord = words.toLowerCase().split(' ');
     for (var i = 0; i < separateWord.length; i++) {
@@ -527,6 +856,57 @@ function firstLetterUpperCase(words) {
        separateWord[i].substring(1);
     }
     return separateWord.join(' ');
+}
+
+function printError(error){
+    $("#notification-container").empty();
+    if (error.responseJSON.messages) {
+        const messages = error.responseJSON.messages;
+        messages.forEach((message) => {
+            $("#notification-container").append(`
+                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                `);
+        })
+    } else if (error.responseJSON.message) {
+        const message = error.responseJSON.message; 
+        $("#notification-container").append(`
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        `);
+    }
+}
+
+function printErrorEditForm(error){
+    $("#edit-form-notification-container").empty();
+    
+    if (error.responseJSON.messages) {
+        const messages = error.responseJSON.messages;
+        messages.forEach((message) => {
+            $("#edit-form-notification-container").append(`
+                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                `);
+        })
+    } else if (error.responseJSON.message) {
+        const message = error.responseJSON.message; 
+        $("#edit-form-notification-container").append(`
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        `);
+    }
 }
 
 function unixToLocal(timestamp) {
@@ -564,8 +944,6 @@ let weekday = new Array(7);
     time,
     date,
     day = d.getDay();
-
-    
 			
 	if (hh > 12) {
 		h = hh - 12;
@@ -622,241 +1000,3 @@ let weekday = new Array(7);
 	
     return date;
 }
-
-// function getHourlyForecast() {
-//     function success(position) {
-//         const latitude  = position.coords.latitude;
-//         const longitude = position.coords.longitude;
-//         console.log(latitude, longitude)
-//         $.ajax({
-//             url: "http://localhost:3000/weather",
-//             method: "POST",
-//             headers: {
-//                 access_token: localStorage.getItem("access_token")
-//             },
-//             data: {
-//                 latitude,
-//                 longitude
-//             }
-//         })
-//         .done((response) => {
-//             $("#hourly-forecast-content").empty();
-//             const city = getCityName(response.timezone);
-
-//             for(let i = 0; i < response.hourly.length; i++) {
-//                 const data = response.hourly[i];
-//                 const date = unixToLocal(data.dt)[0];
-//                 const time = unixToLocal(data.dt)[1];
-//                 const description = firstLetterUpperCase(data.weather[0].description);
-//                 const temperature = `${Math.round(data.temp)} \xB0C`;
-//                 const wind = `${Math.round(data.wind_speed)} m/s`;
-        
-//                 $("#hourly-forecast-content").append(`
-//                 <div class="weather-content custom-border">
-//                     <h1>${city}</h1>
-//                     <p>${date}</p>
-//                     <p>Time: ${time}</p>
-//                     <div style="display:flex;">
-//                         <div>
-//                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
-//                                 style="background-color:white;position:relative;top:0.5rem">
-//                         </div>
-//                         <div class="ml-4">
-//                             <h3>${description}</h3>
-//                             <p>Temperature: ${temperature}</p>
-//                             <p>Wind: ${wind}</p>
-//                         </div>
-//                     </div>
-//                 </div>
-//                 `);
-//             }
-//         })
-//         .fail((err) => {
-//             console.log(err);
-//         })
-//     }
-
-//     function error() {
-//         concsole.log("ERROR")
-//         // $("#location-status").text('Unable to retrieve your location');
-//     }
-
-//     if(!navigator.geolocation) {
-//         console.log("ERROR")
-//         // $("#location-status").text("Geolocation is not supported by your browser");
-//     } else {
-//         // $("#location-status").text("Locating ...");
-//         navigator.geolocation.getCurrentPosition(success, error);
-//     }
-// }
-
-// function getDailyForecast() {
-//     function success(position) {
-//         const latitude  = position.coords.latitude;
-//         const longitude = position.coords.longitude;
-//         console.log(latitude, longitude)
-//         $.ajax({
-//             url: "http://localhost:3000/weather",
-//             method: "POST",
-//             headers: {
-//                 access_token: localStorage.getItem("access_token")
-//             },
-//             data: {
-//                 latitude,
-//                 longitude
-//             }
-//         })
-//         .done((response) => {
-//             $("#daily-forecast-content").empty();
-//             const city = getCityName(response.timezone);
-
-//             for(let i = 0; i < response.daily.length; i++) {
-//                 const data = response.daily[i];
-//                 const date = unixToLocal(data.dt)[0];
-//                 const time = unixToLocal(data.dt)[1];
-//                 const description = firstLetterUpperCase(data.weather[0].description);
-//                 const morningTemp = `${Math.round(data.temp.morn)} \xB0C`;
-//                 const dayTemp = `${Math.round(data.temp.day)} \xB0C`;
-//                 const nightTemp = `${Math.round(data.temp.night)} \xB0C`;
-//                 const wind = `${Math.round(data.wind_speed)} m/s`;
-        
-//                 $("#daily-forecast-content").append(`
-//                 <div class="weather-content custom-border">
-//                     <h1>${city}</h1>
-//                     <p>${date}</p>
-//                     <div style="display:flex;">
-//                         <div>
-//                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
-//                                     style="background-color:white;position:relative;top:0.5rem">
-//                         </div>
-//                         <div class="ml-4">
-//                             <h3><h3>${description}</h3></h3>
-//                             <p>Morning: ${morningTemp}</p>
-//                             <p>Day: ${dayTemp}</p>
-//                             <p>Night: ${nightTemp}</p>
-//                             <p>Wind: ${wind}</p>
-//                         </div>
-//                     </div>
-//                 </div>
-//                 `);
-//             }
-//         })
-//         .fail((err) => {
-//             console.log(err);
-//         })
-//     }
-
-//     function error() {
-//         concsole.log("ERROR")
-//         // $("#location-status").text('Unable to retrieve your location');
-//     }
-
-//     if(!navigator.geolocation) {
-//         concsole.log("ERROR")
-//         // $("#location-status").text("Geolocation is not supported by your browser");
-//     } else {
-//         // $("#location-status").text("Locating ...");
-//         navigator.geolocation.getCurrentPosition(success, error);
-//     }
-// }
-
-function getForecast() {
-    function success(position) {
-        const latitude  = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        // console.log(latitude, longitude)
-        $.ajax({
-            url: "http://localhost:3000/weather",
-            method: "POST",
-            headers: {
-                access_token: localStorage.getItem("access_token")
-            },
-            data: {
-                latitude,
-                longitude
-            }
-        })
-        .done((response) => {
-            console.log(response)
-            $("#forecast-content").empty();
-            const city = response.city.name;
-
-            for(let i = 0; i < response.list.length; i++) {
-                const data = response.list[i];
-                const date = unixToLocal(data.dt)[0];
-                const time = unixToLocal(data.dt)[1];
-                const dateTime = `${date}, ${time}`;
-                const description = firstLetterUpperCase(data.weather[0].description);
-                const mainTemp = `${Math.round(data.main.temp)} \xB0C`;
-                const feelsLike = `${Math.round(data.main.feels_like)} \xB0C`;
-                const minTemp = `${Math.round(data.main.temp_min)} \xB0C`;
-                const maxTemp = `${Math.round(data.main.temp_max)} \xB0C`;
-                const wind = `${Math.round(data.wind.speed)} m/s`;
-        
-                $("#forecast-content").append(`
-                <div class="weather-content custom-border">
-                    <h1>${city}</h1>
-                    <p>${dateTime}</p>
-                    <div style="display:flex;">
-                        <div>
-                            <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
-                                    style="background-color:white;position:relative;top:0.5rem">
-                        </div>
-                        <div class="ml-4">
-                            <h3><h3>${description}</h3></h3>
-                            <p>Temp: ${mainTemp}</p>
-                            <p>Feels Like: ${feelsLike}</p>
-                            <p>Min Temp: ${minTemp}</p>
-                            <p>Max Temp: ${maxTemp}</p>
-                            <p>Wind: ${wind}</p>
-                        </div>
-                    </div>
-                </div>
-                `);
-            }
-        })
-        .fail((err) => {
-            console.log(err);
-        })
-    }
-
-    function error() {
-        concsole.log("ERROR")
-        // $("#location-status").text('Unable to retrieve your location');
-    }
-
-    if(!navigator.geolocation) {
-        concsole.log("ERROR")
-        // $("#location-status").text("Geolocation is not supported by your browser");
-    } else {
-        // $("#location-status").text("Locating ...");
-        navigator.geolocation.getCurrentPosition(success, error);
-    }
-}
-
-function getQuote() {
-        $.ajax({
-            url: "http://localhost:3000/quotes",
-            method: "GET",
-            headers: {
-                access_token: localStorage.getItem("access_token")
-            },
-        })
-        .done((response) => { 
-            // localStorage.setItem("quoteText", response[0].q);
-            // localStorage.setItem("quoteAuthor", response[0].a);
-            if (response[0].q === "Too many requests. Obtain an auth key for unlimited access.") {
-                $("#quote-text").text("Too many requests. Please try again later.");
-            } else {
-                $("#quote-text").text(response[0].q);
-            }
-            
-            $("#quote-author").text(response[0].a);
-            // showMainPage();
-        })
-        .fail((err) => {
-            console.log(err);
-        })
-
-}
-

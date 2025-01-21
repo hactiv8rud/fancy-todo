@@ -26,7 +26,7 @@ const app = express();
 
 // app.use(cors(corsOpts));
 app.use(cors({ 
-    origin: 'https://rniob-2607-fea8-9963-b00-572-c4ee-6df-3e5e.a.free.pinggy.link',
+    origin: 'https://rnqnn-99-253-132-241.a.free.pinggy.link',
     credentials: true
 }));
 // app.use(helmet());    
