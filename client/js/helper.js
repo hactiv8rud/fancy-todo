@@ -61,6 +61,7 @@ function login(){
             accesstoken = response.accessToken;
             csrftoken = response.csrfToken;
             fullName = response.fullName;
+            console.log(accesstoken, csrftoken, fullName, "login");
             showMainPage(accesstoken, csrftoken, fullName);
             Swal.fire(
                 'Logged In!',
@@ -141,6 +142,8 @@ function register(){
 
 function logout() {
     // localStorage.clear();
+    console.log(accesstoken, "logout <<<<<<<<<");
+    console.log(csrftoken, "logout <<<<<<<<<");
     showLoginPage();
     $.ajax({
         url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/logout",
@@ -331,7 +334,7 @@ function createTask(accesstoken, csrftoken) {
         }
     })
     .done((response) => {
-        fetchTodos();
+        fetchTodos(accesstoken, csrftoken);
         Swal.fire(
             "Created!",
             "The task has been created.",
@@ -367,7 +370,7 @@ function completeTask(id) {
         }
     })
     .done((response) => {
-        fetchTodos();
+        fetchTodos(accesstoken, csrftoken);
         Swal.fire(
             'Edited!',
             "The task has been marked as done.",
@@ -400,7 +403,7 @@ function uncompleteTask(id) {
         }
     })
     .done((response) => {
-        fetchTodos();
+        fetchTodos(accesstoken, csrftoken);
         Swal.fire(
             'Edited!',
             "The task has been marked as undone.",
@@ -463,7 +466,7 @@ function editTask(event, id) {
         } 
     })
     .done((response) => {
-        fetchTodos();
+        fetchTodos(accesstoken, csrftoken);
         $("#edit-task-modal").modal("hide");
         Swal.fire(
             'Edited!',
@@ -498,7 +501,7 @@ function deleteTask(id) {
         }
     })
     .done((response) => {
-        fetchTodos();
+        fetchTodos(accesstoken, csrftoken);
         Swal.fire(
             'Deleted!',
             response.message,

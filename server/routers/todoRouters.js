@@ -3,12 +3,11 @@ const authorization = require("../middleware/authorization");
 const TodoController = require("../controllers/TodoController");
 
 router.post("/", TodoController.read);
-router.post("/add", TodoController.add);
+router.post("/add", TodoController.add); 
 
-router.use(authorization);
-router.get("/:id", TodoController.findByPk);
-router.put("/:id", TodoController.put);
-router.patch("/:id", TodoController.patch);
-router.delete("/:id", TodoController.delete);
+router.get("/:id", authorization, TodoController.findByPk);
+router.put("/:id", authorization, TodoController.put);
+router.patch("/:id", authorization, TodoController.patch);
+router.delete("/:id", authorization, TodoController.delete);
 
 module.exports = router;

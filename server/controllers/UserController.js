@@ -152,7 +152,7 @@ class UserController {
             await sequelize.transaction(async (t) => {
                 const UserId = +req.loggedInUser.id;
                 const refreshToken = req.cookies['refreshToken'];
-                const csrfToken = req.headers.csrfToken;
+                const csrfToken = req.headers.csrftoken;
                 await Token.destroy({
                     where: {
                         [Op.or]: [

@@ -1,6 +1,7 @@
 const { Todo } = require("../models");
 module.exports = async (req, res, next) => {
     try {
+        console.log(req.params, "AUTHORISATION<<<<<<<<<<<<<<<<<<<<<<<")
         const result = await Todo.findOne({
             where: {
                 id: req.params.id

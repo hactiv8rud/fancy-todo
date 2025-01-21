@@ -86,6 +86,7 @@ class TodoController {
     static async delete(req, res, next) {
         try {
             const id = Number(req.params.id);
+            console.log(id, "delete")
             const result = await Todo.destroy({
                 where: {
                     id

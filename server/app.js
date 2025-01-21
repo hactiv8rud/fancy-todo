@@ -26,8 +26,9 @@ const app = express();
 
 // app.use(cors(corsOpts));
 app.use(cors({ 
-    origin: 'https://rnqnn-99-253-132-241.a.free.pinggy.link',
-    credentials: true
+    origin: 'https://rnfrg-2607-fea8-9963-b00-572-c4ee-6df-3e5e.a.free.pinggy.link',
+    credentials: true,
+    // methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }));
 // app.use(helmet());    
 // app.use(helmet({

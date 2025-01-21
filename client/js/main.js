@@ -1,6 +1,7 @@
 let accesstoken;
 let csrftoken;
 let fullName;
+
 $(document).ready(() => {
     // if(localStorage.getItem("accesstoken")) {
     //     showMainPage();
