@@ -44,7 +44,7 @@ class UserController {
                     }
                 } else if (compare(req.body.password, data.password)) {
                     accessToken = sign(data.id, data.email);
-                    refreshToken = signRefreshToken(data.id, data.email);
+                    refreshToken = signRefreshToken(data.id, data.email, data.fullName);
                     csrfToken = crypto.randomUUID();
                     const newToken = {
                         accessToken,
@@ -101,7 +101,7 @@ class UserController {
                 }
                 const data = await Token.findOne({
                     where: {
-                        [Op.and]: [{ refreshToken }]
+                        refreshToken
                     },
                     transaction: t
                 });
@@ -113,7 +113,7 @@ class UserController {
                 } else {
                     const decoded = verifyRefreshToken(data.refreshToken);
                     accessToken = sign(decoded.id, decoded.email);
-                    newRefreshToken = signRefreshToken(decoded.id, decoded.email);
+                    newRefreshToken = signRefreshToken(decoded.id, decoded.email, decoded.fullName);
                     newCsrfToken = crypto.randomUUID();
                     const newToken = {
                         accessToken,
@@ -141,7 +141,7 @@ class UserController {
                 sameSite: 'none',
                 priority: 'high'
             });
-            res.status(200).json({ accessToken, newCsrfToken, fullName });
+            res.status(200).json({ accessToken, csrfToken: newCsrfToken, fullName });
         } catch (err) {
             next(err);
         }
@@ -163,11 +163,13 @@ class UserController {
                     transaction: t
                 });
             });
-            // res.cookie('refreshToken', '', {
-            //     expires: new Date(0),
-            //     httpOnly: true,
-            //     secure: false
-            // });
+            res.cookie('refreshToken', '', {
+                expires: new Date(0),
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                priority: 'high'
+            });
             res.status(200).json({ message: 'You have been signed out' });
         } catch (err) {
             next(err);
@@ -185,11 +187,13 @@ class UserController {
                     transaction: t
                 });
             });
-            // res.cookie('refreshToken', '', {
-            //     expires: new Date(0),
-            //     httpOnly: true,
-            //     secure: false
-            // });
+            res.cookie('refreshToken', '', {
+                expires: new Date(0),
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                priority: 'high'
+            });
             res.status(200).json({ message: 'You have been signed out on all devices' });
         } catch (err) {
             next(err);

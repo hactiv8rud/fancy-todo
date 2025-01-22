@@ -1,6 +1,7 @@
 let accesstoken;
 let csrftoken;
 let fullName;
+let isAuthenticated;
 
 $(document).ready(() => {
     // if(localStorage.getItem("accesstoken")) {
@@ -8,13 +9,16 @@ $(document).ready(() => {
     // } else {
     //     showLoginPage();
     // }
+    
+    // console.log(accesstoken, "main.js");
+    // console.log(csrftoken, "main.js");
+    // if(accesstoken) {
+    //     console.log(accesstoken, "main.js");
+    //     showMainPage(accesstoken, csrftoken, fullName);
+    // } else {
+    //     showLoginPage();
+    // }
     reauth();
-    if(accesstoken) {
-        console.log(accesstoken, "main.js");
-        showMainPage(accesstoken, csrftoken, fullName);
-    } else {
-        showLoginPage();
-    }
 
     $("#login-form").on("submit", (e) => {
         e.preventDefault();
@@ -126,6 +130,6 @@ $(document).ready(() => {
     });
 
     $("#btn-logout").on("click", (e) => {
-        logout();
+        logout(accesstoken, csrftoken);
     })
 })

@@ -72,7 +72,6 @@ function login(){
         .fail((err) => {
             console.log(err);
             printError(err);
-            
         })
         .always(() => {
             $("#login-email").val("");
@@ -80,7 +79,7 @@ function login(){
         })
 }
 
-function reauth() {
+function reauth(cb, id, event) {
     $.ajax({
         url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/reauth",
         method: "POST",
@@ -93,12 +92,23 @@ function reauth() {
             // localStorage.setItem("accesstoken", response.accesstoken);
             // localStorage.setItem("fullName", response.fullName);
             // getQuote();
-            accesstoken = response.accesstoken;
-            csrftoken = response.csrftoken;
+            accesstoken = response.accessToken;
+            csrftoken = response.csrfToken;
             fullName = response.fullName;
-            // showMainPage();
+            // $("#user-name").text(fullName);
+            if (!isAuthenticated) {
+                showMainPage(accesstoken, csrftoken, fullName);
+                isAuthenticated = true;
+            } else if (id && event) {
+                cb(accesstoken, csrftoken, id, event);
+            } else if (id) {
+                cb(accesstoken, csrftoken, id)
+            } else {
+                cb(accesstoken, csrftoken)
+            }
         })
         .fail((err) => {
+            isAuthenticated = false;
             showLoginPage();
             // console.log(err);
             // printError(err);
@@ -140,7 +150,7 @@ function register(){
         })
 }
 
-function logout() {
+function logout(accesstoken, csrftoken) {
     // localStorage.clear();
     console.log(accesstoken, "logout <<<<<<<<<");
     console.log(csrftoken, "logout <<<<<<<<<");
@@ -157,11 +167,12 @@ function logout() {
         }
     })
     .done((response) => {
-        showLoginPage();
+        isAuthenticated = false;
+        showLoginPage();  
     })
     .fail((err) => {
         if (err.status === 419) {
-            reauth();
+            reauth(logout);
         } else {
             console.log(err);
             printError(err);
@@ -235,8 +246,8 @@ function fetchTodos(accesstoken, csrftoken){
                             <h6 class="card-subtitle mb-2 text-muted">${due_date}</h6>
                             <p class="card-text">${result.description}</p>
                             <div class="task-btn-container">
-                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask(${result.id})"><img src="./images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
-                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask('${accesstoken}', '${csrftoken}', ${result.id})"><img src="./images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm('${accesstoken}', '${csrftoken}', ${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
                                 <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="./images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
                             </div>
                         </div>
@@ -249,8 +260,8 @@ function fetchTodos(accesstoken, csrftoken){
                             <h6 class="card-subtitle mb-2 text-muted">${due_date}</h6>
                             <p class="card-text">${result.description}</p>
                             <div class="task-btn-container">
-                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask(${result.id})"><img src="./images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
-                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="completeTask('${accesstoken}', '${csrftoken}', ${result.id})"><img src="./images/mark_as_done.svg" class="mark_as_done-task-icon" width="30" height="30">Mark as Done</button>
+                                <button type="button" class="btn mt-2 btn-sm" onclick="editForm('${accesstoken}', '${csrftoken}', ${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
                                 <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="./images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
                             </div>
                         </div>
@@ -264,8 +275,8 @@ function fetchTodos(accesstoken, csrftoken){
                         <h6 class="card-subtitle mb-2 text-muted">${due_date}</h6>
                         <p class="card-text">${result.description}</p>
                         <div class="task-btn-container">
-                            <button type="button" class="btn mt-2 btn-sm" onclick="uncompleteTask(${result.id})"><img src="./images/mark_as_undone.svg" class="mark_as_undone-task-icon" width="30" height="30">Mark as Undone</button>
-                            <button type="button" class="btn mt-2 btn-sm" onclick="editForm(${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
+                            <button type="button" class="btn mt-2 btn-sm" onclick="uncompleteTask('${accesstoken}', '${csrftoken}', ${result.id})"><img src="./images/mark_as_undone.svg" class="mark_as_undone-task-icon" width="30" height="30">Mark as Undone</button>
+                            <button type="button" class="btn mt-2 btn-sm" onclick="editForm('${accesstoken}', '${csrftoken}', ${result.id})" data-toggle="modal" data-target="#edit-task-modal"><img src="./images/edit.svg" class="edit-task-icon" width="30" height="30">Edit</button>
                             <button type="button" class="btn mt-2 btn-sm" onclick="deleteConfirm(${result.id})" data-toggle="modal" data-target="#delete-confirm"><img src="./images/delete.svg" class="delete-task-icon" width="30" height="30">Delete</button>
                         </div>
                     </div>
@@ -304,7 +315,7 @@ function fetchTodos(accesstoken, csrftoken){
     })
     .fail((err) => {
         if (err.status === 419) {
-            reauth();
+            reauth(fetchTodos);
         } else {
             console.log(err);
             printError(err);
@@ -334,6 +345,7 @@ function createTask(accesstoken, csrftoken) {
         }
     })
     .done((response) => {
+        $("#add-task-form").trigger("reset");
         fetchTodos(accesstoken, csrftoken);
         Swal.fire(
             "Created!",
@@ -343,18 +355,18 @@ function createTask(accesstoken, csrftoken) {
     })
     .fail((err) => {
         if (err.status === 419) {
-            reauth();
+            reauth(createTask);
         } else {
             console.log(err);
             printError(err);
         }
     })
-    .always(() => {
-        $("#add-task-form").trigger("reset");
-    })
+    // .always(() => {
+    //     $("#add-task-form").trigger("reset");
+    // })
 }
 
-function completeTask(id) {
+function completeTask(accesstoken, csrftoken, id) {
     $.ajax({
         method: "PATCH",
         url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
@@ -379,7 +391,7 @@ function completeTask(id) {
     })
     .fail((err) => {
         if (err.status === 419) {
-            reauth();
+            reauth(completeTask, id);
         } else {
             console.log(err);
             printError(err);
@@ -387,7 +399,7 @@ function completeTask(id) {
     })
 }
 
-function uncompleteTask(id) {
+function uncompleteTask(accesstoken, csrftoken, id) {
     $.ajax({
         method: "PATCH",
         url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
@@ -412,7 +424,7 @@ function uncompleteTask(id) {
     })
     .fail((err) => {
         if (err.status === 419) {
-            reauth();
+            reauth(uncompleteTask, id);
         } else {
             console.log(err);
             printError(err);
@@ -420,9 +432,9 @@ function uncompleteTask(id) {
     })
 }
 
-function editForm(id) {
+function editForm(accesstoken, csrftoken, id) {
     $.ajax({
-        method: "GET",
+        method: "POST",
         url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
         xhrFields: {
             withCredentials: true
@@ -436,15 +448,19 @@ function editForm(id) {
         $("#edit-task-title").val(response.title);
         $("#edit-task-description").val(response.description);
         $("#edit-task-due_date").val(response.due_date);
-        $("#edit-task-btn").attr("onclick", `editTask(event,${id})`)
+        $("#edit-task-btn").attr("onclick", `editTask('${accesstoken}', '${csrftoken}', ${id}, event)`)
     })
     .fail((err) => {
-        console.log(err);
-        printError(err);
+        if (err.status === 419) {
+            reauth(editForm, id);
+        } else {
+            console.log(err);
+            printError(err);
+        }
     })
 }
 
-function editTask(event, id) {
+function editTask(accesstoken, csrftoken, id, event) {
     event.preventDefault();
     const title = $("#edit-task-title").val();
     const description = $("#edit-task-description").val();
@@ -476,7 +492,7 @@ function editTask(event, id) {
     })
     .fail((err) => {
         if (err.status === 419) {
-            reauth();
+            reauth(editTask, id, event);
         } else {
             console.log(err);
             printError(err);
@@ -485,10 +501,10 @@ function editTask(event, id) {
 }  
   
 function deleteConfirm(id) {
-    $("#delete-confirm-btn").attr("onclick", `deleteTask(${id})`)
+    $("#delete-confirm-btn").attr("onclick", `deleteTask('${accesstoken}', '${csrftoken}', ${id})`)
 }
 
-function deleteTask(id) {
+function deleteTask(accesstoken, csrftoken, id) {
     $.ajax({
         method: "DELETE",
         url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
@@ -510,7 +526,7 @@ function deleteTask(id) {
     })
     .fail((err) => {
         if (err.status === 419) {
-            reauth();
+            reauth(deleteTask, id);
         } else {
             console.log(err);
             printError(err);
@@ -698,6 +714,7 @@ function getCurrentWeather(accesstoken, csrftoken) {
             const description = firstLetterUpperCase(response.weather[0].description);
             // const temperature = `${Math.round(response.current.temp)} \xB0C`;
             const temperature = `${Math.round(response.main.temp)} \xB0C`;
+            const feelsLike = `${Math.round(response.main.feels_like)} \xB0C`;
             const wind = `${Math.round(response.wind.speed)} m/s`;
             const icon_url = `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
         
@@ -706,11 +723,12 @@ function getCurrentWeather(accesstoken, csrftoken) {
             $("#current-weather-icon").attr("src", icon_url);
             $("#current-weather-desc").text(description);
             $("#current-weather-temp").text(`Temperature: ${temperature}`);
+            $("#current-weather-feels-like").text(`Feels Like: ${feelsLike}`);
             $("#current-weather-wind").text(`Wind Speed: ${wind}`);
         })
         .fail((err) => {
             if (err.status === 419) {
-                reauth();
+                reauth(getCurrentWeather);
             } else {
                 console.log(err);
                 printError(err);
@@ -793,7 +811,7 @@ function getForecast(accesstoken, csrftoken) {
         })
         .fail((err) => {
             if (err.status === 419) {
-                reauth();
+                reauth(getForecast);
             } else {
                 console.log(err);
                 printError(err);
@@ -843,7 +861,7 @@ function getQuote(accesstoken, csrftoken) {
         })
         .fail((err) => {
             if (err.status === 419) {
-                reauth();
+                reauth(getQuote);
             } else {
                 console.log(err);
                 printError(err);

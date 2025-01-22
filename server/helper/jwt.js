@@ -12,9 +12,9 @@ function verifyToken(token) {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   }
   
-function signRefreshToken(id, email) {
+function signRefreshToken(id, email, fullName) {
     return jwt.sign(
-        { id, email },
+        { id, email, fullName },
         process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
     );
 }
