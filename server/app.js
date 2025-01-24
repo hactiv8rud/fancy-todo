@@ -26,7 +26,7 @@ const app = express();
 
 // app.use(cors(corsOpts));
 app.use(cors({ 
-    origin: 'https://cooperative-ware-holds-railroad.trycloudflare.com',
+    origin: 'https://fbfb-2607-fea8-9963-b00-d071-f0d0-6f54-db9f.ngrok-free.app',
     credentials: true,
     // methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }));
