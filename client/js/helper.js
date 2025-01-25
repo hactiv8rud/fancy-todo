@@ -44,7 +44,7 @@ function login(){
     const password = $("#login-password").val();
 
     $.ajax({
-        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/login",
+        url: "http://localhost:3000/login",
         method: "POST",
         xhrFields: {
             withCredentials: true
@@ -81,7 +81,7 @@ function login(){
 
 function reauth(cb, id, event) {
     $.ajax({
-        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/reauth",
+        url: "http://localhost:3000/reauth",
         method: "POST",
         xhrFields: {
             withCredentials: true
@@ -121,7 +121,7 @@ function register(){
     const email = $("#register-email").val();
     const password = $("#register-password").val();
     $.ajax({
-        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/register",
+        url: "http://localhost:3000/register",
         method: "POST",
         xhrFields: {
             withCredentials: true
@@ -156,7 +156,7 @@ function logout(accesstoken, csrftoken) {
     console.log(csrftoken, "logout <<<<<<<<<");
     showLoginPage();
     $.ajax({
-        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/logout",
+        url: "http://localhost:3000/logout",
         method: "POST",
         xhrFields: {
             withCredentials: true
@@ -187,7 +187,7 @@ function logout(accesstoken, csrftoken) {
 function handleCredentialResponse(response) {
     var googleToken = response.credential;
     $.ajax({
-        url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/googleLogin",
+        url: "http://localhost:3000/googleLogin",
         method: "POST",
         xhrFields: {
             withCredentials: true
@@ -203,7 +203,7 @@ function handleCredentialResponse(response) {
         accesstoken = response.accessToken;
         csrftoken = response.csrfToken;
         fullName = response.fullName;
-        showMainPage(response.accesstoken, response.csrftoken, response.fullName);
+        showMainPage(accesstoken, csrftoken, fullName);
         Swal.fire(
             'Logged In!',
             "Welcome!",
@@ -221,7 +221,7 @@ function fetchTodos(accesstoken, csrftoken){
     $("#edit-form-notification-container").empty();
     $.ajax({
         method: "POST",
-        url : "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos",
+        url : "http://localhost:3000/todos",
         xhrFields: {
             withCredentials: true
         },
@@ -330,7 +330,7 @@ function createTask(accesstoken, csrftoken) {
 
     $.ajax({
         method: "POST",
-        url : "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/add",
+        url : "http://localhost:3000/todos/add",
         xhrFields: {
             withCredentials: true
         },
@@ -369,7 +369,7 @@ function createTask(accesstoken, csrftoken) {
 function completeTask(accesstoken, csrftoken, id) {
     $.ajax({
         method: "PATCH",
-        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         headers: {
             accesstoken,
             csrftoken
@@ -402,7 +402,7 @@ function completeTask(accesstoken, csrftoken, id) {
 function uncompleteTask(accesstoken, csrftoken, id) {
     $.ajax({
         method: "PATCH",
-        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         xhrFields: {
             withCredentials: true
         },
@@ -435,7 +435,7 @@ function uncompleteTask(accesstoken, csrftoken, id) {
 function editForm(accesstoken, csrftoken, id) {
     $.ajax({
         method: "POST",
-        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         xhrFields: {
             withCredentials: true
         },
@@ -467,7 +467,7 @@ function editTask(accesstoken, csrftoken, id, event) {
     const due_date = $("#edit-task-due_date").val();
     $.ajax({
         method: "PUT",
-        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         xhrFields: {
             withCredentials: true
         },
@@ -507,7 +507,7 @@ function deleteConfirm(id) {
 function deleteTask(accesstoken, csrftoken, id) {
     $.ajax({
         method: "DELETE",
-        url: `https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/todos/${id}`,
+        url: `http://localhost:3000/todos/${id}`,
         xhrFields: {
             withCredentials: true
         },
@@ -551,7 +551,7 @@ function deleteTask(accesstoken, csrftoken, id) {
 //         const longitude = position.coords.longitude;
 //         console.log(latitude, longitude)
 //         $.ajax({
-//             url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/weather",
+//             url: "http://localhost:3000/weather",
 //             method: "POST",
 //             headers: {
 //                 accesstoken: localStorage.getItem("accesstoken")
@@ -618,7 +618,7 @@ function deleteTask(accesstoken, csrftoken, id) {
 //         const longitude = position.coords.longitude;
 //         console.log(latitude, longitude)
 //         $.ajax({
-//             url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/weather",
+//             url: "http://localhost:3000/weather",
 //             method: "POST",
 //             headers: {
 //                 accesstoken: localStorage.getItem("accesstoken")
@@ -688,7 +688,7 @@ function getCurrentWeather(accesstoken, csrftoken) {
         const longitude = position.coords.longitude;
         // console.log(latitude, longitude)
         $.ajax({
-            url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/current-weather",
+            url: "http://localhost:3000/current-weather",
             method: "POST",
             xhrFields: {
                 withCredentials: true
@@ -756,7 +756,7 @@ function getForecast(accesstoken, csrftoken) {
         const longitude = position.coords.longitude;
         // console.log(latitude, longitude)
         $.ajax({
-            url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/weather",
+            url: "http://localhost:3000/weather",
             method: "POST",
             xhrFields: {
                 withCredentials: true
@@ -837,7 +837,7 @@ function getQuote(accesstoken, csrftoken) {
     console.log(accesstoken, "AT helper.js");
     console.log(csrftoken, "CT helper.js");
         $.ajax({
-            url: "https://55b8-2607-fea8-9963-b00-4cbd-aca4-618-f656.ngrok-free.app/quotes",
+            url: "http://localhost:3000/quotes",
             method: "POST",
             xhrFields: {
                 withCredentials: true

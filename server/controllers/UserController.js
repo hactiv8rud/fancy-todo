@@ -227,9 +227,8 @@ class UserController {
                     );
                 }
 
-                const fullName = `${payload.given_name} ${payload.family_name}`;
                 const accessToken = sign(data.id, data.email);
-                const refreshToken = signRefreshToken(data.id, data.email);
+                const refreshToken = signRefreshToken(data.id, data.email, data.fullName);
                 const csrfToken = crypto.randomUUID();
                 const newToken = {
                     accessToken,
@@ -247,12 +246,14 @@ class UserController {
                     transaction: t
                 });
                 res.cookie('refreshToken', refreshToken, {
-                    MaxAge: +process.env.REFRESH_TOKEN_EXPIRY_MILLISECONDS,
+                    expires: new Date(Date.now() + +process.env.REFRESH_TOKEN_EXPIRY_MILLISECONDS),
                     httpOnly: true,
-                    secure: false
+                    secure: true,
+                    sameSite: 'none',
+                    priority: 'high'
                 });
                 res.status(200).json({
-                    accessToken, csrfToken, fullName
+                    accessToken, csrfToken, fullName: data.fullName
                 });
             })
         } catch (err) {
