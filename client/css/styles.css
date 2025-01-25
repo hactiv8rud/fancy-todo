@@ -18,6 +18,7 @@ body {
    top:50%;
    left:50%;
    transform: translate(-50%, -50%);
+   z-index: 1;
 }
    
 /* .body-container {
@@ -26,6 +27,16 @@ body {
    min-height: 100vh; 
 } */
 
+#notification-container {
+   position: fixed;
+   top:0;
+   width: 100%;
+   z-index: 1000;
+}
+
+.navbar {
+   z-index: 1;
+}
 .main-page-container {
    margin-top: 4rem;
    margin-bottom: 0.5rem;
