@@ -131,5 +131,9 @@ $(document).ready(() => {
 
     $("#btn-logout").on("click", (e) => {
         logout(accesstoken, csrftoken);
-    })
+    });
+
+    $("#btn-home").on("click", (e) => {
+        reauth();
+    });
 })
