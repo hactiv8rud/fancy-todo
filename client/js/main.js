@@ -134,6 +134,6 @@ $(document).ready(() => {
     });
 
     $("#btn-home").on("click", (e) => {
-        reauth();
+        showMainPage(accesstoken, csrftoken, fullName);
     });
 })
