@@ -12,22 +12,22 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light" id="navbar">
-        <button type="button" id-="btn-home" class="navbar-brand rounded">
+    <nav class="navbar fixed-top navbar-light bg-light" id="navbar">
+        <button type="button" id="btn-home" class="navbar-brand rounded">
             <img src="./images/navbar-logo.svg" width="30" height="30" class="d-inline-block align-top" alt=""
                 loading="lazy">
             Fancy ToDo
         </button>
         <!-- <button onclick="showMainPage()" type="button" class="btn btn-light" id="nav-home">Home</button> -->
-        <button type="button" class="btn btn-light ml-auto" id="btn-logout">Log out</button>
+        <button type="button" class="btn btn-light ml-auto" id="btn-logout">Log Out</button>
     </nav>
     <div id="notification-container"></div>
 
-    <div class="body-container ml-4 mr-4">
+    <div class="body-container">
         <div id="login-page">
             <div class="register-login-content">
                 <div class="login-image-container">
-                    <img src="./images/login-image.svg" alt="a cute stickman waving with one hand" width="200px">
+                    <img class="stickman-login" src="./images/login-image.svg" alt="a cute stickman waving with one hand" width="200px">
                 </div>
                 <div class="form-container">
                     <div class="login-form-title">
@@ -60,7 +60,7 @@
         <div id="register-page">
             <div class="register-login-content" id="register-content">
                 <div class="register-image-container">
-                    <img src="./images/register-image.svg" alt="a cute stickman waving with two hands" width="250px">
+                    <img class="stickman-register" src="./images/register-image.svg" alt="a cute stickman waving with two hands" width="250px">
                 </div>
                 <div class="form-container">
                     <div class="register-form-title">
@@ -96,12 +96,11 @@
             </div>
         </div>
 
-        <div id="main-page">
-
+        <div class="main-page-container ml-4 mr-4" id="main-page">
             <div class="main-top-container row" style="height:40%">
-                <div class="weather-widget-container col custom-border"
+                <div class="weather-widget-container col-sm-12 col-md-6 col-lg-4 custom-border"
                     style="padding-left:0;padding-right:0;max-height:30rem">
-                    <div class="welcome-container" style="width:100%;height:100%;padding:1rem">
+                    <div class="welcome-container">
                         <div id="welcome-title">Welcome</div>
                         <div class="mt-2" style="color:blue" id="user-name"></div>
 
@@ -136,11 +135,11 @@
                     </div>
 
                 </div>
-                <div class="add-task-container col" style="padding-left:0;padding-right:0;width:30rem">
-                    <div class="add-task-form-content">
+                <div class="add-task-container col-sm-12 col-md-6 col-lg-4">
+                    <div class="add-task-form-container">
                         <div class="add-form-container">
                             <div class="add-task-form-title">
-                                <h1>Add a task</h1>
+                                <h1>Add a Task</h1>
                             </div>
                             <form id="add-task-form">
                                 <div class="form-group">
@@ -168,7 +167,7 @@
                     </div>
                 </div>
 
-                <div class="quote-widget-container col custom-border"
+                <div class="quote-widget-container col-sm-12 col-md-12 col-lg-4 custom-border"
                     style="padding-left:0;padding-right:0;height:30rem">
                     <div class="quote-container" style="width:100%;height:100%;padding:1rem">
                         <div id="welcome-title">Quote Garden</div>
@@ -184,7 +183,7 @@
             </div>
 
             <div class="main-bottom-container mt-2 row">
-                <div class="main-uncompleted-container col mr-1">
+                <div class="main-uncompleted-container col-sm-12 col-md-6 col-lg-4">
                     <div class="main-uncompleted-header-container">
                         <h3 class="main-uncompleted-header-title text-center">ONGOING</h3>
                             <div class="form-group">
@@ -203,7 +202,7 @@
                     <div id="main-uncompleted-content">
                     </div>
                 </div>
-                <div class="main-completed-container col">
+                <div class="main-completed-container col-sm-12 col-md-6 col-lg-4">
                     <div class="main-completed-header-container">
                         <h3 class="main-completed-header-title text-center">COMPLETED</h3>
                             <div class="form-group">
@@ -220,7 +219,7 @@
                     </div>
                     <div id="main-completed-content"></div>
                 </div>
-                <div class="main-expired-container col ml-1">
+                <div class="main-expired-container col-sm-12 col-md-12 col-lg-4">
                     <div class="main-expired-header-container">
                         <h3 class="main-expired-header-title text-center">EXPIRED</h3>
                             <div class="form-group">
