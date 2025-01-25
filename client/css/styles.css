@@ -346,6 +346,10 @@ input[type=text], input[type=email], input[type=password], input[type=date] {
    text-align: center;
 }
 
+.modal-content {
+   border-radius: 1rem;
+}
+
 .weather-content {
    display:flex;
    flex-direction: column;
@@ -354,6 +358,7 @@ input[type=text], input[type=email], input[type=password], input[type=date] {
    padding: 1rem;
    max-height: 22rem;
    overflow: hidden;
+   margin: 1rem 1rem;
 }
 
 .quote-widget-container{

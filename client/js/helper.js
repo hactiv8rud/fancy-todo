@@ -796,7 +796,7 @@ function getForecast(accesstoken, csrftoken) {
                 $("#forecast-content").append(`
                 <div class="weather-content custom-border">
                     <h1>${city}</h1>
-                    <p>${dateTime}</p>
+                    <p style="color: blue; font-weight: bold">${dateTime}</p>
                     <div style="display:flex;">
                         <div>
                             <img class="custom-border" src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png"
