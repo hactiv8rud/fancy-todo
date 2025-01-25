@@ -391,7 +391,7 @@ input[type=text], input[type=email], input[type=password], input[type=date] {
    display:none;
 }
 
-@media (min-width: 576px) {
+@media only screen and (min-width: 576px) {
    .stickman-login {
       display: block;
    }
@@ -401,18 +401,17 @@ input[type=text], input[type=email], input[type=password], input[type=date] {
    }
 }
 
-@media (min-width:992px) and (max-width:1045px) {
+@media only screen and (min-width:992px) and (max-width:1045px) {
    #city {
       margin-bottom:0;
    }
 
    #current-weather-temp, #current-weather-feels-like, #current-weather-wind {
-      font-size:0.9rem;
+      font-size: 0.9rem;
    }
-
-
+   
    #current-weather-date {
       font-size:0.9rem;
       margin-bottom:0;
    }
-}​
+}
