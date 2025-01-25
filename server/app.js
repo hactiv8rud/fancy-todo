@@ -26,7 +26,7 @@ const app = express();
 
 // app.use(cors(corsOpts));
 app.use(cors({ 
-    origin: 'https://fbfb-2607-fea8-9963-b00-d071-f0d0-6f54-db9f.ngrok-free.app',
+    origin: 'http://127.0.0.1:5500',
     credentials: true,
     // methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }));
