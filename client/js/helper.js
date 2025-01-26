@@ -916,6 +916,14 @@ function printError(error){
             </button>
         </div>
         `);
+    } else {
+        $("#notification-container").append(`
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">Something is wrong, please try again later.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        `);
     }
 }
 
