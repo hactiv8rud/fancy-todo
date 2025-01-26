@@ -896,26 +896,28 @@ function firstLetterUpperCase(words) {
 
 function printError(error){
     $("#notification-container").empty();
-    if (error.responseJSON.messages) {
-        const messages = error.responseJSON.messages;
-        messages.forEach((message) => {
+    if (error.responseJSON) {
+        if (error.responseJSON.messages) {
+            const messages = error.responseJSON.messages;
+            messages.forEach((message) => {
+                $("#notification-container").append(`
+                    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    `);
+            })
+        } else if (error.responseJSON.message) {
+            const message = error.responseJSON.message; 
             $("#notification-container").append(`
-                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                `);
-        })
-    } else if (error.responseJSON.message) {
-        const message = error.responseJSON.message; 
-        $("#notification-container").append(`
-        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        `);
+            <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">${message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            `);
+        }
     } else {
         $("#notification-container").append(`
         <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">Something is wrong, please try again later.
