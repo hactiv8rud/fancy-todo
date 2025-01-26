@@ -6,6 +6,10 @@ function showLoginPage() {
     $("#main-page").hide();
     $('html, body').addClass("no-vertical-scroll");
     $('.body-container').addClass("center-viewport");
+    if (!isInfoShown) {
+        showInfo();
+        isInfoShown = true;
+    }
 }
 
 function showRegisterPage() {
@@ -19,9 +23,6 @@ function showRegisterPage() {
 }
 
 function showMainPage(accesstoken, csrftoken, fullName) {
-    // console.log(accesstoken, "AT helper.js");
-    // console.log(csrftoken, "CT helper.js");
-    // console.log(fullName, "FN helper.js");
     $('html, body').removeClass("no-vertical-scroll");
     $('.body-container').removeClass("center-viewport");
     getCurrentWeather(accesstoken, csrftoken);
@@ -43,6 +44,24 @@ function showMainPage(accesstoken, csrftoken, fullName) {
     // $("#quote-text").text(localStorage.getItem("quoteText"));
     // $("#quote-author").text(`- ${localStorage.getItem("quoteAuthor")} -`);
     fetchTodos(accesstoken, csrftoken);
+}
+
+function showInfo() {
+    const techStack = ["HTML5", "CSS3", "jQuery", "Bootstrap", "Express", "Sequelize", "Node.js", "PostgresSQL", "JavaScript"];
+    $('#tech-stack-deck').empty();
+    for(let i = 0; i < techStack.length; i++) {
+        $('#tech-stack-deck').append(`
+             <div class="col-4">
+                <div class="card">
+                    <img class="card-img-top" src="./images/${techStack[i]}.svg" alt="${techStack[i]}">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">${techStack[i]}</h5>
+                    </div>
+                </div>
+            </div>
+        `);
+    }
+    $('#info-modal').modal('show');
 }
 
 function login(){
@@ -67,7 +86,6 @@ function login(){
             accesstoken = response.accessToken;
             csrftoken = response.csrfToken;
             fullName = response.fullName;
-            console.log(accesstoken, csrftoken, fullName, "login");
             showMainPage(accesstoken, csrftoken, fullName);
             Swal.fire(
                 'Logged In!',
@@ -158,8 +176,6 @@ function register(){
 
 function logout(accesstoken, csrftoken) {
     // localStorage.clear();
-    console.log(accesstoken, "logout <<<<<<<<<");
-    console.log(csrftoken, "logout <<<<<<<<<");
     showLoginPage();
     $.ajax({
         url: "http://localhost:3000/logout",
@@ -692,7 +708,6 @@ function getCurrentWeather(accesstoken, csrftoken) {
     function success(position) {
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        // console.log(latitude, longitude)
         $.ajax({
             url: "http://localhost:3000/current-weather",
             method: "POST",
@@ -709,13 +724,11 @@ function getCurrentWeather(accesstoken, csrftoken) {
             }
         })
         .done((response) => {
-            // console.log(response);
             const city = response.name;
             // const date = unixToLocal(response.current.dt)[0];
             const date = unixToLocal(response.dt)[0];
             const time = unixToLocal(response.dt)[1];
             const dateTime = `${date}, ${time}`;
-            // console.log(date)
             // const description = firstLetterUpperCase(response.current.weather[0].description);
             const description = firstLetterUpperCase(response.weather[0].description);
             // const temperature = `${Math.round(response.current.temp)} \xB0C`;
@@ -760,7 +773,6 @@ function getForecast(accesstoken, csrftoken) {
     function success(position) {
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        // console.log(latitude, longitude)
         $.ajax({
             url: "http://localhost:3000/weather",
             method: "POST",
@@ -777,7 +789,6 @@ function getForecast(accesstoken, csrftoken) {
             }
         })
         .done((response) => {
-            console.log(response)
             $("#forecast-content").empty();
             const city = response.city.name;
 
@@ -840,8 +851,6 @@ function getForecast(accesstoken, csrftoken) {
 }
 
 function getQuote(accesstoken, csrftoken) {
-    console.log(accesstoken, "AT helper.js");
-    console.log(csrftoken, "CT helper.js");
         $.ajax({
             url: "http://localhost:3000/quotes",
             method: "POST",

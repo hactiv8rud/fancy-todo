@@ -37,6 +37,16 @@ body {
 .navbar {
    z-index: 1;
 }
+
+.navbar-btn {
+   display: flex;
+}
+
+.navbar-btn-name {
+   margin-bottom: 0;
+   display: none;
+}
+
 .main-page-container {
    margin-top: 4rem;
    margin-bottom: 0.5rem;
@@ -406,6 +416,31 @@ input[type=text], input[type=email], input[type=password], input[type=date] {
    display:none;
 }
 
+.modal-header {
+   padding: 1rem 1.5rem;
+}
+
+.info-modal-text-container {
+   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+}
+
+.card {
+   /* min-width:85px;
+   max-width:100px; */
+   /* height:160px; */
+   border-style: none;
+}
+
+.card-body {
+   padding: 0;
+}
+
+.card-title {
+   font-weight: bold;
+   margin-top: 0;
+}
+
+
 @media only screen and (min-width: 576px) {
    .stickman-login {
       display: block;
@@ -428,5 +463,29 @@ input[type=text], input[type=email], input[type=password], input[type=date] {
    #current-weather-date {
       font-size:0.9rem;
       margin-bottom:0;
+   }
+}
+
+@media only screen and (max-width: 464px) {
+   .card-title {
+      font-size: medium;
+   }
+}
+
+@media only screen and (max-width: 426px) {
+   .card-title {
+      font-size: small;
+   }
+}
+
+@media only screen and (max-width: 429px) {
+   .card-title {
+      font-size: small;
+   }
+}
+
+@media only screen and (min-width: 411px) {
+   .navbar-btn-name {
+      display: block;
    }
 }

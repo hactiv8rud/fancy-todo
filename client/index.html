@@ -8,18 +8,28 @@
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="./css/styles.css">
-    <title>Fancy Todo</title>
+    <title>Fancytodo</title>
 </head>
 
 <body>
     <nav class="navbar fixed-top navbar-light bg-light" id="navbar">
-        <button type="button" id="btn-home" class="navbar-brand rounded">
+        <button type="button" id="btn-home" class="navbar-brand rounded navbar-btn">
             <img src="./images/navbar-logo.svg" width="30" height="30" class="d-inline-block align-top" alt=""
                 loading="lazy">
-            Fancy ToDo
+            <p class="navbar-btn-name">Fancytodo</p>
+        </button>
+        <button type="button" id="btn-info" class="navbar-brand rounded navbar-btn">
+            <img src="./images/info.svg" width="30" height="30" class="d-inline-block align-top" alt=""
+                loading="lazy">
+            <p class="navbar-btn-name">Info</p>
         </button>
         <!-- <button onclick="showMainPage()" type="button" class="btn btn-light" id="nav-home">Home</button> -->
-        <button type="button" class="btn btn-light ml-auto" id="btn-logout">Log Out</button>
+        <button type="button" id="btn-logout" class="navbar-brand rounded ml-auto mr-0 navbar-btn">
+            <img src="./images/logout.svg" width="30" height="30" class="d-inline-block align-top" alt=""
+                loading="lazy">
+            <p class="navbar-btn-name">Sign out</p>
+        </button>
+        <!-- <button type="button" class="btn btn-light ml-auto" id="btn-logout">Sign out</button> -->
     </nav>
     <div id="notification-container"></div>
 
@@ -309,7 +319,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">5-Day Forecast (3-Hour Step)</h5>
+              <h5 class="modal-title" style="font-weight: bold" id="exampleModalLongTitle">5-Day Forecast (3-Hour Step)</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -346,8 +356,41 @@
         </div>
     </div>
 
-
-
+    <div class="modal fade" id="info-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" style="font-weight:bold" id="exampleModalLongTitle">Welcome to Fancytodo!</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="info-modal-text-container">
+                <h1 class="text-center mb-3">Tech Stack</h1>
+                <div class="card-deck row" id="tech-stack-deck">
+                   
+                </div>
+                <div class="description">
+                    <h2>Description</h2>
+                    <p>A web application for managing personal tasks, checking current weather, weather forecast and getting random inspiring qoutes.<p>
+                    <h2>Features</h2>
+                    <ul>
+                        <li>Register, sign in with email or sign in with Google</li>
+                        <li>Add tasks with title, description and due date</li>
+                        <li>Tasks are grouped into "ongoing", "completed", "expired"</li>
+                        <li>Tasks can be edited, deleted, changed from "ongoing" to "completed" and vice versa</li>
+                        <li>Show current weather based on location (location access is required)</li>
+                        <li>Get 5-Day (3-Hour Step) weather forecast</li>
+                        <li>Get random inspiring quotes</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"

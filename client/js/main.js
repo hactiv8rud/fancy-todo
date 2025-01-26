@@ -2,6 +2,7 @@ let accesstoken;
 let csrftoken;
 let fullName;
 let isAuthenticated;
+let isInfoShown;
 
 $(document).ready(() => {
     // if(localStorage.getItem("accesstoken")) {
@@ -10,14 +11,12 @@ $(document).ready(() => {
     //     showLoginPage();
     // }
     
-    // console.log(accesstoken, "main.js");
-    // console.log(csrftoken, "main.js");
     // if(accesstoken) {
-    //     console.log(accesstoken, "main.js");
     //     showMainPage(accesstoken, csrftoken, fullName);
     // } else {
     //     showLoginPage();
     // }
+
     reauth();
 
     $("#login-form").on("submit", (e) => {
@@ -52,6 +51,11 @@ $(document).ready(() => {
     // })
 
     $("#get-forecast").on("click", (e) => {
+        $("#forecast-content").empty();
+        $("#forecast-content").append(`
+            <img style="width:100%" src="./images/weather-forecast-loading.gif" alt="sun and cloud">
+            <p class="text-center" style="font-size:x-large; font-weight:bold; color:blue"> LOADING ... </p>
+        `);
         getForecast(accesstoken, csrftoken);
     })
 
@@ -72,8 +76,6 @@ $(document).ready(() => {
             } else {
                 target = ".card-subtitle";
             }
-            // console.log(target);
-            // console.log(value);
             $("#main-uncompleted-content > div").filter(function() {
                 let targetText =  $(this).find(`${target}`).text().toLowerCase();
                 $(this).toggle($(this).find(`${target}`).text().toLowerCase().indexOf(value) > -1);
@@ -95,8 +97,6 @@ $(document).ready(() => {
             } else {
                 target = ".card-subtitle";
             }
-            // console.log(target);
-            // console.log(value);
             $("#main-completed-content > div").filter(function() {
                 let targetText =  $(this).find(`${target}`).text().toLowerCase();
                 $(this).toggle($(this).find(`${target}`).text().toLowerCase().indexOf(value) > -1);
@@ -118,8 +118,6 @@ $(document).ready(() => {
             } else {
                 target = ".card-subtitle";
             }
-            // console.log(target);
-            // console.log(value);
             $("#main-expired-content > div").filter(function() {
                 let targetText =  $(this).find(`${target}`).text().toLowerCase();
                 $(this).toggle($(this).find(`${target}`).text().toLowerCase().indexOf(value) > -1);
@@ -135,5 +133,9 @@ $(document).ready(() => {
 
     $("#btn-home").on("click", (e) => {
         showMainPage(accesstoken, csrftoken, fullName);
+    });
+    
+    $("#btn-info").on("click", (e) => {
+        showInfo();
     });
 })
