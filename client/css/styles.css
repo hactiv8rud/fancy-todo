@@ -9,9 +9,9 @@ body {
    overflow-x:hidden;
 }
 
-.no-vertical-scroll {
+/* .no-vertical-scroll {
    overflow-y: hidden;
-}
+} */
 
 .center-viewport {
    position: absolute;
@@ -479,6 +479,12 @@ input[type=text], input[type=email], input[type=password], input[type=date] {
 }
 
 @media only screen and (max-width: 429px) {
+   .card-title {
+      font-size: small;
+   }
+}
+
+@media only screen and (min-width: 576px) {
    .card-title {
       font-size: small;
    }
