@@ -4,7 +4,6 @@ function showLoginPage() {
     $("#navbar").hide();
     $("#notification-container").empty();
     $("#main-page").hide();
-    $('html, body').addClass("no-vertical-scroll");
     $('.body-container').addClass("center-viewport");
     if (!isInfoShown) {
         showInfo();
@@ -18,7 +17,6 @@ function showRegisterPage() {
     $("#navbar").hide();
     $("#notification-container").empty();
     $("#main-page").hide();
-    $('html, body').addClass("no-vertical-scroll");
     $('.body-container').addClass("center-viewport");
 }
 
