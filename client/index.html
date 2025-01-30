@@ -12,7 +12,10 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top navbar-light bg-light" id="navbar">
+    <div id="loadingMask" class="center-viewport" style="background: #fff;">
+        <img class="img-fluid" src="./images/loading-spinning-orange.gif">
+    </div>
+    <nav class="hide navbar fixed-top navbar-light bg-light" id="navbar">
         <button type="button" id="btn-home" class="navbar-brand rounded navbar-btn">
             <img src="./images/navbar-logo.svg" width="30" height="30" class="d-inline-block align-top" alt=""
                 loading="lazy">
@@ -33,7 +36,7 @@
     </nav>
     <div id="notification-container"></div>
 
-    <div class="body-container">
+    <div id="body-container" class="hide body-container">
         <div id="login-page">
             <div class="register-login-content">
                 <div class="login-image-container">

@@ -2,6 +2,11 @@
    box-sizing: border-box;
 }
 
+
+.hide {
+   display: none;
+}
+
 html,
 body {
    min-height: 100vh; 
