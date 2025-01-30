@@ -7,6 +7,7 @@ function showLoginPage() {
     $("#notification-container").empty();
     $("#main-page").hide();
     $('.body-container').addClass("center-viewport");
+    $('#loadingMask').fadeOut();
     if (!isInfoShown) {
         showInfo();
         isInfoShown = true;
@@ -14,6 +15,7 @@ function showLoginPage() {
 }
 
 function showRegisterPage() {
+    $('#loadingMask').fadeOut();
     $('#body-container').removeClass('hide');
     $('#navbar').removeClass('hide');
     $("#login-page").hide();
@@ -22,11 +24,13 @@ function showRegisterPage() {
     $("#notification-container").empty();
     $("#main-page").hide();
     $('.body-container').addClass("center-viewport");
+    $('#loadingMask').fadeOut();
 }
 
 function showMainPage(accesstoken, csrftoken, fullName) {
     $('html, body').removeClass("no-vertical-scroll");
     $('.body-container').removeClass("center-viewport");
+    $('#loadingMask').fadeOut();
     $('#body-container').removeClass('hide');
     $('#navbar').removeClass('hide');
     getCurrentWeather(accesstoken, csrftoken);
@@ -340,6 +344,7 @@ function fetchTodos(accesstoken, csrftoken){
                     </div>
                 </div>`);
         }
+        $('#loadingMask').fadeOut();
     })
     .fail((err) => {
         if (err.status === 419) {

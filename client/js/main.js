@@ -138,5 +138,4 @@ $(document).ready(() => {
     $("#btn-info").on("click", (e) => {
         showInfo();
     });
-    $('#loadingMask').fadeOut();
 })
